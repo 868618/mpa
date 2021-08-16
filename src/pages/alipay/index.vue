@@ -7,7 +7,7 @@
 
     <div class="address">
       <div class="location_box">
-        <img class="location" :src="locationImg" />
+        <img class="location" :src="location" />
 
         <div class="userinfo">
           <div class="name">展示干 <span>15239481297</span></div>
@@ -94,18 +94,14 @@
 </template>
 
 <script>
-import imageMap from '@/utils/imagesMap'
-
-const locationImg = require('@/assets/images/location.png')
+import { location } from '@/utils/imagesMap'
 
 export default {
   name: 'AliPay',
-
   data() {
     return {
-      imageMap,
       tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
-      locationImg,
+      location,
     }
   },
   methods: {

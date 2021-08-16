@@ -26,7 +26,13 @@ module.exports = {
   },
 
   chainWebpack(config) {
-    config.resolve.alias.set('@', '/src');
-    ANALYZER && config.plugin('analyzer').use(BundleAnalyzerPlugin);
+    config.resolve.alias.set('@', '/src')
+    ANALYZER && config.plugin('analyzer').use(BundleAnalyzerPlugin)
+
+    config.module
+      .rule('images')
+      .use('url-loader')
+      .loader('url-loader')
+      .tap((options) => Object.assign(options, { limit: 10240 }))
   },
 };
