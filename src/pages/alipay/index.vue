@@ -24,8 +24,8 @@
         </div>
 
         <ul class="list">
-          <li class="item" v-for="(item, index) in 3" :key="index">
-            <div class="good_img">
+          <li class="item" v-for="(item, index) in 3" :key="index" :class="[{ giftt: item == 2 }, 'item']">
+            <div class="good_img" :class="{ gift: item>=2 }">
               <img :src="tmp" />
             </div>
             <div class="good_detail">
@@ -38,20 +38,6 @@
               </div>
             </div>
           </li>
-
-          <!-- <li class="item" v-for="(item, index) in 2" :key="'__' + index">
-                        <div class="good_img gift">
-                            <img :src="tmp" >
-                        </div>
-                        <div class="good_detail">
-                            <div class="name">这是一个商品名称这是一个商等哈就多喝水粉红色的品名称这是一个商这是一个商品名称这是一个商等哈就多喝水粉红色的品名称这是一个商</div>
-                            <div class="amount">
-                                <p class="price"><span>￥</span>28</p>
-                                <p class="num">X2</p>
-                            </div>
-                        </div>
-
-                    </li> -->
         </ul>
       </div>
     </div>
@@ -94,7 +80,12 @@
 </template>
 
 <script>
+import moment from 'moment'
+import momentDurationFormatSetup from 'moment-duration-format'
+
 import { location } from '@/utils/imagesMap'
+
+momentDurationFormatSetup(moment)
 
 export default {
   name: 'AliPay',
@@ -104,10 +95,27 @@ export default {
       location,
     }
   },
+  created() {
+    const time = 1874
+    this.loopRefreshTime(time)
+  },
+
   methods: {
     test() {
       const a = 13
       console.log(a)
+    },
+
+    loopRefreshTime(time) {
+      const m = moment.duration(time, 's')
+      const remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
+      console.log('-----------', remaining)
+
+      time && setTimeout(this.loopRefreshTime, 1000, time - 1)
+    },
+
+    format(num) {
+      return num >= 10 ? num : `0${num}`
     },
   },
 }
@@ -219,17 +227,18 @@ export default {
 
       .list {
         margin-top: 50px;
+
+        .giftt{
+          border-top: 2px dashed #eeeff0;
+        }
+
         .item {
           height: 162px;
-          margin-bottom: 32px;
-          // padding-bottom: 32px;
+          overflow: hidden;
           display: flex;
           align-items: center;
-          &:last-child {
-            border-bottom: 2px dashed #eeeff0;
-            margin-bottom: 0;
-            padding-bottom: 32px;
-          }
+          margin-bottom: 16px;
+          padding-top: 16px;
 
           .good_img {
             width: 162px;

@@ -14,10 +14,11 @@ module.exports = {
     'no-console': 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'import/no-unresolved': 0,
-    'semi': 0,
-    'max-len': ["error", { "code": 180 }],
+    semi: 0,
+    'max-len': ['error', { code: 180 }],
     'import/extensions': 0,
     'no-unused-expressions': 0,
-    'global-require': 0
+    'global-require': 0,
+    'no-plusplus': 0,
   },
 };

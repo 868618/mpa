@@ -1,5 +1,6 @@
 const pxtorem = require('postcss-pxtorem');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const webpack = require('webpack')
 
 const { ANALYZER } = process.env;
 
@@ -34,5 +35,9 @@ module.exports = {
       .use('url-loader')
       .loader('url-loader')
       .tap((options) => Object.assign(options, { limit: 10240 }))
+    /*
+      优化moment库体积
+    */
+    config.plugin('moment').use(webpack.IgnorePlugin, [/^\.\/locale$/, /moment$/])
   },
 };
