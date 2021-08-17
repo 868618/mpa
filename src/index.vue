@@ -1,8 +1,16 @@
 <template>
   <div class="alipay">
     <div class="order_status">
-      <div class="left">待审核</div>
-      <div class="right">请在23:50:34内审核，逾期订单将自</div>
+      <!-- <template>
+        <div class="left">待审核</div>
+        <div class="right">请在23:50:34内审核，逾期订单将自</div>
+      </template> -->
+      <template>
+        <div class="cancel">
+          <div class="l">订单号：498273982</div>
+          <div class="r">已取消</div>
+        </div>
+      </template>
     </div>
 
     <div class="address">
@@ -10,8 +18,8 @@
         <img class="location" :src="location" />
 
         <div class="userinfo">
-          <div class="name">张三 <span>15239481297</span></div>
-          <div class="addr_detail">爱上我的女老板</div>
+            <div class="name">张三 <span>15239481297</span></div>
+            <div class="addr_detail">爱上我的女老板</div>
         </div>
       </div>
     </div>
@@ -146,6 +154,23 @@ export default {
       font-weight: 400;
       color: #666666;
     }
+
+    .cancel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      // font-size: 24px !important;
+      font-weight: 400;
+      width: 100%;
+
+      .l {
+        color: #666666;
+      }
+
+      .r {
+        color: #f1270d;
+      }
+    }
   }
 
   .address {
@@ -160,7 +185,7 @@ export default {
       right: 30px;
       top: 50%;
       transform: translateY(-50%);
-      background: url("../../assets/images/right_arrow.png") no-repeat center;
+      background: url("./assets/images/right_arrow.png") no-repeat center;
       background-size: 100%;
     }
     .location_box {
@@ -262,7 +287,7 @@ export default {
               left: 0;
               right: 0;
               bottom: 0;
-              background: url("../../assets/images/gift.png") no-repeat center;
+              background: url("./assets/images/gift.png") no-repeat center;
               background-size: 100% 100%;
               z-index: 1;
             }

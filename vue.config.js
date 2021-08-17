@@ -4,20 +4,9 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { IgnorePlugin } = require('webpack')
 
-const { ANALYZER, CHANNEL } = process.env
-
-const pages = {
-  alipay: {
-    entry: 'src/pages/alipay',
-    template: 'public/index.html',
-    title: '订单详情',
-  },
-}
+const { ANALYZER } = process.env
 
 module.exports = {
-  pages: {
-    [CHANNEL]: pages[CHANNEL],
-  },
 
   css: {
     loaderOptions: {
