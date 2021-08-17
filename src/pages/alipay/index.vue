@@ -10,7 +10,7 @@
         <img class="location" :src="location" />
 
         <div class="userinfo">
-          <div class="name">展示干 <span>15239481297</span></div>
+          <div class="name">张三 <span>15239481297</span></div>
           <div class="addr_detail">爱上我的女老板</div>
         </div>
       </div>
@@ -96,8 +96,8 @@ export default {
     }
   },
   created() {
-    const time = 1874
-    this.loopRefreshTime(time)
+    // const time = 1874
+    // this.loopRefreshTime(time)
   },
 
   methods: {
