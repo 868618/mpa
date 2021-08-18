@@ -1,13 +1,13 @@
 import axios from 'axios'
 // import config from '@/config'
 
-const { BASE_URL } = process.env
+const { VUE_APP_BASE_URL } = process.env
 // const baseURL = config.get(NODE_ENV)
 
 console.log('baseURL----------', process.env)
 
 const request = axios.create({
-  baseURL: BASE_URL, // url = base url + request url
+  baseURL: VUE_APP_BASE_URL, // url = base url + request url
   timeout: 5000, // request timeout
 })
 

@@ -56,6 +56,6 @@ module.exports = {
     //     pathRewrite: { '^/': '' },
     //   },
     // },
-    proxy: 'http://mall-bsy.vxwei.com/',
+    // proxy: 'http://mall-bsy.vxwei.com/',
   },
 };

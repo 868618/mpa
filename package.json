@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "cross-env vue-cli-service serve --mode development",
-    "build": "vue-cli-service build",
+    "dev:pro": "cross-env vue-cli-service serve --mode production",
+    "build:dev": "vue-cli-service build --mode development",
+    "build": "vue-cli-service build --mode production",
     "analyzer": "cross-env ANALYZER=true vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
