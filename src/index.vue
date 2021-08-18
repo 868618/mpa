@@ -74,7 +74,7 @@
     </div>
 
     <div class="btn">
-      <div class="left" @click="toWeChat"><p>返回微信小程序</p></div>
+      <div class="left" v-if="!isAlipay" @click="toWeChat"><p>返回微信小程序</p></div>
 
       <div class="right ali" @click="toAliPay"><p>支付宝支付888</p></div>
     </div>
@@ -103,6 +103,7 @@ export default {
       query: null,
       remaining: null,
       openlink: null,
+      isAlipay: false,
     }
   },
   beforeCreate() {
@@ -114,9 +115,14 @@ export default {
 
   created() {
     const isAlipay = isAliPayApp()
+    this.isAlipay = isAlipay
     const isHasAuthCode = window.location.href.includes('auth_code')
     if (isAlipay && !isHasAuthCode) {
-      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=20000067&scope=auth_base&redirect_uri=${window.encodeURIComponent(window.location.href)}`
+      const redirect = window.encodeURIComponent(window.location.href)
+      console.log('redirect========', redirect)
+      setTimeout(() => {
+        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=20000067&scope=auth_base&redirect_uri=${redirect}`
+      }, 10000)
       return
     }
     this.getDetail()
