@@ -121,7 +121,7 @@ export default {
       const redirect = window.encodeURIComponent(window.location.href)
       console.log('redirect========', redirect)
       setTimeout(() => {
-        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=20000067&scope=auth_base&redirect_uri=${redirect}`
+        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002170686138&scope=auth_base&redirect_uri=${redirect}`
       }, 10000)
       return
     }
