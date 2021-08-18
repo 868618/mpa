@@ -4,7 +4,9 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { IgnorePlugin } = require('webpack')
 
-const { ANALYZER } = process.env
+const { ANALYZER, CONSOLE } = process.env
+
+const VConsolePlugin = require('vconsole-webpack-plugin')
 
 module.exports = {
 
@@ -32,6 +34,8 @@ module.exports = {
     */
     ANALYZER && config.plugin('analyzer').use(BundleAnalyzerPlugin)
 
+    CONSOLE && config.plugin('console').use(VConsolePlugin, [{ enable: true }])
+
     /*
       图片小于10k就自动转base64
     */
@@ -56,6 +60,6 @@ module.exports = {
     //     pathRewrite: { '^/': '' },
     //   },
     // },
-    // proxy: 'http://mall-bsy.vxwei.com/',
+    proxy: 'http://mall-bsy.vxwei.com/',
   },
 };

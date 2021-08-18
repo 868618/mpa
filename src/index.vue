@@ -1,14 +1,11 @@
 <template>
   <div class="alipay" v-if="orderInfo">
+    <div class="count_down" v-html="countDown" v-if="orderInfo.cut_off_time" />
     <div class="order_status">
-      <!-- <template>
-        <div class="left">待审核</div>
-        <div class="right">请在23:50:34内审核，逾期订单将自</div>
-      </template> -->
       <template>
         <div class="cancel">
-          <div class="l">订单号：498273982</div>
-          <div class="r">已取消</div>
+          <div class="l">订单号：{{ query.order_id }}</div>
+          <div class="r">{{ orderInfo.order_state_name }}</div>
         </div>
       </template>
     </div>
@@ -53,11 +50,6 @@
     <div class="order_detail">
       <ul class="order_detail_box">
         <li class="order_detail_item">
-          <p class="left">订单编号</p>
-          <p class="right">2584959045984395</p>
-        </li>
-
-        <li class="order_detail_item">
           <p class="left">下单时间</p>
           <p class="right">{{ orderInfo.add_time }}</p>
         </li>
@@ -66,18 +58,25 @@
           <p class="left">支付方式</p>
           <p class="right">{{ orderInfo.payment_name }}</p>
         </li>
+
+        <li class="order_detail_item">
+          <p class="left">待支付：</p>
+          <p class="right">{{ orderInfo.real_pay_amount }}</p>
+        </li>
       </ul>
 
-      <div class="amonut">
+      <!-- <div class="amonut">
         <p class="tip">待支付：</p>
         <div class="price"><span>￥</span>{{ orderInfo.real_pay_amount }}</div>
-      </div>
+      </div> -->
+
+      <div class="tip">注：如有特殊发货需求请联系顾问</div>
     </div>
 
     <div class="btn">
-      <div class="left"><p>返回微信小程序</p></div>
+      <div class="left" @click="toWeChat"><p>返回微信小程序</p></div>
 
-      <div class="right ali"><p>支付宝支付</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付888</p></div>
     </div>
   </div>
 </template>
@@ -88,6 +87,7 @@ import momentDurationFormatSetup from 'moment-duration-format'
 
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
+import { isAliPayApp } from '@/utils/tool'
 
 momentDurationFormatSetup(moment)
 
@@ -95,44 +95,98 @@ export default {
   name: 'AliPay',
   data() {
     return {
-      tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
+      // tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
       location,
       shop,
       orderInfo: null,
       lineNum: -1,
+      query: null,
+      remaining: null,
+      openlink: null,
     }
   },
+  beforeCreate() {
+    // const ua = window.navigator.userAgent.toLowerCase()
+    console.log('网页地址是：', window.location.href)
+    console.log('ua---------------------', isAliPayApp())
+    console.log('auth_code---------------------', window.location.href.includes('auth_code'))
+  },
+
   created() {
+    const isAlipay = isAliPayApp()
+    const isHasAuthCode = window.location.href.includes('auth_code')
+    if (isAlipay && !isHasAuthCode) {
+      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=20000067&scope=auth_base&redirect_uri=${window.encodeURIComponent(window.location.href)}`
+      return
+    }
     this.getDetail()
+    this.getScheme()
+  },
+
+  computed: {
+    countDown() {
+      return this.orderInfo.cut_off_tips.replace('###', `<span style="color: #f1270d;min-width:60px;text-align: center;">${this.remaining}</span>`)
+    },
   },
 
   methods: {
     async getDetail() {
-      const res = await api.getDetail({
-        app: 'userorder',
-        mod: 'order_info_xcx',
-        key: '3af2172167b7a3af185f9c7167088019',
-        order_id: '7772',
-      })
+      const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
+      const query = Object.fromEntries(entries)
+
+      console.log('传进来的参数', query)
+      this.query = query
+      const res = await api.getDetail(query)
+
       if (res.code === 200) {
         const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
         this.lineNum = lineNum
         this.orderInfo = res.datas.order_info
-        // console.info('res------', this.orderInfo)
-        // console.info('res------', this.orderInfo.goods_list)
+        this.orderInfo.cut_off_time && this.loopRefreshTime(this.orderInfo.cut_off_time)
       }
+    },
+
+    toAliPay() {
+      const url = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
+      // console.log('url:', url)
+      window.location.href = url
+    },
+
+    toWeChat() {
+      window.location.href = this.openlink
     },
 
     loopRefreshTime(time) {
       const m = moment.duration(time, 's')
       const remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
       console.log('-----------', remaining)
+      this.remaining = remaining
 
-      time && setTimeout(this.loopRefreshTime, 1000, time - 1)
+      if (time) {
+        setTimeout(this.loopRefreshTime, 1000, time - 1)
+      } else {
+        this.getDetail()
+      }
     },
 
     format(num) {
       return num >= 10 ? num : `0${num}`
+    },
+
+    async getScheme() {
+      const res = await api.getScheme({
+        path: 'pages/goods_detail/goods_detail',
+        query: 'gid=320&source=1&source_Key=http%3A%2F%2F10.5.4.2%3A8080%2Findex1.html%3Fbd_vid%3DuANBIyIxuANvg1nYnj04nHRkg1Dsg1DvnWbkP1b3P1csn1f',
+        is_expire: true,
+        expire_type: 1,
+        expire_interval: 1,
+        expire_time: 1630132832,
+      })
+
+      console.log('res0000000000000', res)
+      if (res.code === 200) {
+        this.openlink = res.data.openlink
+      }
     },
   },
 }
@@ -144,6 +198,23 @@ export default {
   min-height: 100vh;
   background: #eff1f2;
   padding-bottom: 180px;
+
+  .count_down {
+    opacity: 1;
+    font-size: 28px;
+    font-weight: 400;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    padding: 0 24px;
+    background: #fff;
+    margin-bottom: 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+  }
   .order_status {
     height: 100px;
     padding: 0 24px;
@@ -151,6 +222,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: #fff;
+    margin-bottom: 24px;
+    height: 80px;
 
     .left {
       font-size: 40px;
@@ -168,7 +242,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      // font-size: 24px !important;
+      font-size: 24px;
       font-weight: 400;
       width: 100%;
 
@@ -253,7 +327,6 @@ export default {
           height: 44px;
           display: inline-block;
           overflow: hidden;
-          background: chartreuse;
         }
         > p {
           line-height: 1;
@@ -266,6 +339,9 @@ export default {
 
         .giftt{
           border-top: 2px dashed #eeeff0;
+          .price {
+            opacity: 0;
+          }
         }
 
         .item {
@@ -373,6 +449,10 @@ export default {
           color: #f1270d;
         }
       }
+    }
+    .tip {
+      color: #FA6400;
+      font-size: 24px;
     }
 
     .amonut {
