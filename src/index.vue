@@ -1,5 +1,5 @@
 <template>
-  <div class="alipay">
+  <div class="alipay" v-if="orderInfo">
     <div class="order_status">
       <!-- <template>
         <div class="left">待审核</div>
@@ -18,8 +18,8 @@
         <img class="location" :src="location" />
 
         <div class="userinfo">
-            <div class="name">张三 <span>15239481297</span></div>
-            <div class="addr_detail">爱上我的女老板</div>
+            <div class="name">{{ orderInfo.reciver_name }} <span>{{ orderInfo.reciver_phone }}</span></div>
+            <div class="addr_detail">{{ orderInfo.reciver_addr }}</div>
         </div>
       </div>
     </div>
@@ -27,22 +27,22 @@
     <div class="order_list">
       <div class="shop_box">
         <div class="shop_title">
-          <img :src="tmp" class="shop_icon" />
-          <p>碧生源会员福利店</p>
+          <img :src="shop" class="shop_icon" />
+          <p>{{ orderInfo.store_name }}</p>
         </div>
 
         <ul class="list">
-          <li class="item" v-for="(item, index) in 3" :key="index" :class="[{ giftt: item == 2 }, 'item']">
-            <div class="good_img" :class="{ gift: item>=2 }">
-              <img :src="tmp" />
+          <li class="item" v-for="(item, index) in orderInfo.goods_list" :key="index" :class="[{ giftt: index == lineNum }, 'item']">
+            <div class="good_img" :class="{ gift: Number(item.is_gift) }">
+              <img :src="item.image_url" />
             </div>
             <div class="good_detail">
               <div class="name">
-                这是一个商品名称这是一个商等哈就多喝水粉红色的品名称这是一个商这是一个商品名称这是一个商等哈就多喝水粉红色的品名称这是一个商
+                {{ item.goods_name }}
               </div>
               <div class="amount">
-                <p class="price"><span>￥</span>28</p>
-                <p class="num">X2</p>
+                <p class="price"><span>￥</span>{{ item.goods_price }}</p>
+                <p class="num">X{{ item.goods_num }}</p>
               </div>
             </div>
           </li>
@@ -59,23 +59,18 @@
 
         <li class="order_detail_item">
           <p class="left">下单时间</p>
-          <p class="right">2021-04-16 13:09:00</p>
+          <p class="right">{{ orderInfo.add_time }}</p>
         </li>
 
         <li class="order_detail_item">
-          <p class="left">下单时间</p>
-          <p class="right">2021-04-16 13:09:00</p>
-        </li>
-
-        <li class="order_detail_item">
-          <p class="left">下单时间</p>
-          <p class="right">2021-04-16 13:09:00</p>
+          <p class="left">支付方式</p>
+          <p class="right">{{ orderInfo.payment_name }}</p>
         </li>
       </ul>
 
       <div class="amonut">
         <p class="tip">待支付：</p>
-        <div class="price"><span>￥</span>28</div>
+        <div class="price"><span>￥</span>{{ orderInfo.real_pay_amount }}</div>
       </div>
     </div>
 
@@ -91,7 +86,8 @@
 import moment from 'moment'
 import momentDurationFormatSetup from 'moment-duration-format'
 
-import { location } from '@/utils/imagesMap'
+import { location, shop } from '@/utils/imagesMap'
+import api from '@/api'
 
 momentDurationFormatSetup(moment)
 
@@ -101,17 +97,30 @@ export default {
     return {
       tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
       location,
+      shop,
+      orderInfo: null,
+      lineNum: -1,
     }
   },
   created() {
-    // const time = 1874
-    // this.loopRefreshTime(time)
+    this.getDetail()
   },
 
   methods: {
-    test() {
-      const a = 13
-      console.log(a)
+    async getDetail() {
+      const res = await api.getDetail({
+        app: 'userorder',
+        mod: 'order_info_xcx',
+        key: '3af2172167b7a3af185f9c7167088019',
+        order_id: '7772',
+      })
+      if (res.code === 200) {
+        const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
+        this.lineNum = lineNum
+        this.orderInfo = res.datas.order_info
+        // console.info('res------', this.orderInfo)
+        // console.info('res------', this.orderInfo.goods_list)
+      }
     },
 
     loopRefreshTime(time) {
@@ -229,6 +238,8 @@ export default {
 
     .shop_box {
       padding-top: 30px;
+      padding-bottom: 20px;
+      // background: red;
       .shop_title {
         display: flex;
         align-items: center;

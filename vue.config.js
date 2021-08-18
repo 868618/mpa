@@ -46,4 +46,16 @@ module.exports = {
     */
     config.plugin('moment').use(IgnorePlugin, [/^\.\/locale$/, /moment$/])
   },
+
+  devServer: {
+    // 'http://local.sldshop.com',
+    // proxy: {
+    //   '/': {
+    //     target: 'http://mall-bsy.vxwei.com/',
+    //     changeOrigin: true,
+    //     pathRewrite: { '^/': '' },
+    //   },
+    // },
+    proxy: 'http://mall-bsy.vxwei.com/',
+  },
 };

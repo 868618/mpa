@@ -20,5 +20,6 @@ module.exports = {
     'no-unused-expressions': 0,
     'global-require': 0,
     'no-plusplus': 0,
+    'arrow-parens': 0,
   },
 };
