@@ -150,6 +150,8 @@ export default {
         window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
         return
       }
+
+      window.ap.showLoading()
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
       const result = await api.getAliPayUserId({ auth_code, token })
@@ -159,6 +161,7 @@ export default {
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
+      window.ap.hideLoading()
       console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
         window.ap.tradePay({ tradeNO: rrr.info.tradeNO })
