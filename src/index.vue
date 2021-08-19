@@ -132,7 +132,7 @@ export default {
     const query = this.getQuery()
     this.query = query
 
-    api.getAliPayUserId({ auth_code: '8889999' }, { token: '777' })
+    // api.getAliPayUserId({ auth_code: '8889999' }, { token: '777' })
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
@@ -160,16 +160,16 @@ export default {
   async mounted() {
     if (this.isHasAuthCode) {
       // this.getDetail()
-      const res = await api.getDetail(this.query)
-      console.log('res**************', res)
+      // const res = await api.getDetail(this.query)
+      // console.log('res**************', res)
       // eslint-disable-next-line camelcase
-      // const { auth_code } = this.query
-      // api.getAliPayUserId({ auth_code }).then((res) => {
-      //   console.log('res******************', res)
-      //   window.ap.tradePay(this.query.auth_code)
-      // }).catch(error => {
-      //   console.log('error____________', error)
-      // })
+      const { auth_code } = this.query
+      api.getAliPayUserId({ auth_code }).then((res) => {
+        console.log('res******************', res)
+        window.ap.tradePay(this.query.auth_code)
+      }).catch(error => {
+        console.log('error____________', error)
+      })
     }
   },
 
