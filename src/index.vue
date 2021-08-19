@@ -76,7 +76,7 @@
     <div class="btn">
       <div class="left" v-if="!isAlipay" @click="toWeChat"><p>返回微信小程序</p></div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付888</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
     </div>
   </div>
 </template>
@@ -104,6 +104,7 @@ export default {
       remaining: null,
       openlink: null,
       isAlipay: false,
+      isHasAuthCode: false,
     }
   },
   beforeCreate() {
@@ -117,16 +118,18 @@ export default {
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
     const isHasAuthCode = window.location.href.includes('auth_code')
-    if (isAlipay && !isHasAuthCode) {
-      const redirect = window.encodeURIComponent(window.location.href)
-      console.log('redirect========', redirect)
-      setTimeout(() => {
+    this.isHasAuthCode = isHasAuthCode
+    if (isAlipay) {
+      if (!isHasAuthCode) {
+        const redirect = window.encodeURIComponent(window.location.href)
         window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002170686138&scope=auth_base&redirect_uri=${redirect}`
-      }, 10000)
-      return
+        return
+      }
     }
+
     this.getDetail()
-    this.getScheme()
+
+    !isAlipay && this.getScheme()
   },
 
   computed: {
@@ -135,10 +138,20 @@ export default {
     },
   },
 
+  mounted() {
+    console.log('this.tradePay--------', window.ap.tradePay)
+    /*
+        有支付宝回传的码的时候去唤起支付
+      */
+    if (this.isHasAuthCode) {
+      window.ap.tradePay(this.query.auth_code)
+    }
+  },
+
   methods: {
     async getDetail() {
-      const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
-      const query = Object.fromEntries(entries)
+      // const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
+      const query = this.getQuery()
 
       console.log('传进来的参数', query)
       this.query = query
@@ -154,7 +167,6 @@ export default {
 
     toAliPay() {
       const url = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
-      // console.log('url:', url)
       window.location.href = url
     },
 
@@ -180,9 +192,11 @@ export default {
     },
 
     async getScheme() {
+      console.log(`share_id=${this.query.share_id}`, '000000000000')
+      const query = `share_id=${this.query.share_id}`
       const res = await api.getScheme({
-        path: 'pages/goods_detail/goods_detail',
-        query: 'gid=320&source=1&source_Key=http%3A%2F%2F10.5.4.2%3A8080%2Findex1.html%3Fbd_vid%3DuANBIyIxuANvg1nYnj04nHRkg1Dsg1DvnWbkP1b3P1csn1f',
+        path: '/salesman/pages/usersCheck/index',
+        query,
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
@@ -193,6 +207,11 @@ export default {
       if (res.code === 200) {
         this.openlink = res.data.openlink
       }
+    },
+
+    getQuery() {
+      const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
+      return Object.fromEntries(entries)
     },
   },
 }
