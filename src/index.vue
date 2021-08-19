@@ -88,7 +88,7 @@
           <img src="./assets/images/second_step.png" >
         </div>
 
-        <div class="iknow">
+        <div class="iknow" @click="closeMask">
           <img src="./assets/images/i_know.png" >
         </div>
       </div>
@@ -256,6 +256,10 @@ export default {
     getQuery() {
       const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
       return Object.fromEntries(entries)
+    },
+
+    closeMask() {
+      this.isShowMask = false
     },
   },
 }
