@@ -132,7 +132,13 @@ export default {
     const query = this.getQuery()
     this.query = query
 
-    // api.getAliPayUserId({ auth_code: '8889999' }, { token: '777' })
+    // const { key: token } = this.query
+
+    // api.getAliPayUserId({ auth_code: '8889999' }, { token }).then(res => {
+    //   console.log('getAliPayUserId_______', res)
+    // }).catch(err => {
+    //   console.log('000000000000', err)
+    // })
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
@@ -164,6 +170,8 @@ export default {
       // console.log('res**************', res)
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
+
+      console.log('token------------------------', token)
       // eslint-disable-next-line no-underscore-dangle
       const _this = this
       api.getAliPayUserId({ auth_code }, { token }).then((res) => {
@@ -201,7 +209,7 @@ export default {
     loopRefreshTime(time) {
       const m = moment.duration(time, 's')
       const remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
-      console.log('-----------', remaining)
+      // console.log('-----------', remaining)
       this.remaining = remaining
 
       if (time) {
