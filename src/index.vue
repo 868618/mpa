@@ -153,17 +153,18 @@ export default {
       }
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
+      try {
+        const upLoadAuthCode = await api.getAliPayUserId({ auth_code, token })
+        if (upLoadAuthCode.code === 200) {
+          const { key } = this.query
+          // eslint-disable-next-line camelcase
+          const { pay_sn } = this.orderInfo
+          const rrr = await api.getAliPaySsn({ key, pay_sn, payment_code: 'mini_alipay' })
 
-      // eslint-disable-next-line no-underscore-dangle
-      // const _this = this
-      const upLoadAuthCode = await api.getAliPayUserId({ auth_code, token })
-      if (upLoadAuthCode.code === 200) {
-        const { key } = this.query
-        // eslint-disable-next-line camelcase
-        const { pay_sn } = this.orderInfo
-        const rrr = await api.getAliPaySsn({ key, pay_sn, payment_code: 'mini_alipay' })
-
-        console.log('rrr______', rrr)
+          console.log('rrr______', rrr)
+        }
+      } catch (error) {
+        console.log('tryerr', error)
       }
     }
 
