@@ -203,15 +203,24 @@ export default {
 
     payNow() {
       const { tradeNO } = this
-      console.log('tradeNO', tradeNO)
+      console.log('tradeNO_______', tradeNO)
       // window.ap.tradePay({ tradeNO: this.tradeNO }, res => {
       //   console.log('tradePay_______', res)
       // })
-      window.AlipayJSBridge.tradePay({
-        tradeNO,
-      }, res => {
-        console.log('res___', res)
+
+      this.ready(() => {
+        window.AlipayJSBridge.call('tradePay', { tradeNO }, (data) => {
+          console.log('data______', data)
+        })
       })
+    },
+
+    ready(callback) {
+      if (window.AlipayJSBridge) {
+        callback && callback();
+      } else {
+        document.addEventListener('AlipayJSBridgeReady', callback, false);
+      }
     },
 
     toWeChat() {
