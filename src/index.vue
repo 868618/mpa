@@ -78,6 +78,21 @@
 
       <div class="right ali" @click="toAliPay"><p>支付宝支付444</p></div>
     </div>
+
+    <PubMask v-if="isShowMask">
+      <div class="mask">
+        <div class="first">
+          <img src="./assets/images/first_step.png" >
+        </div>
+        <div class="second">
+          <img src="./assets/images/second_step.png" >
+        </div>
+
+        <div class="iknow">
+          <img src="./assets/images/i_know.png" >
+        </div>
+      </div>
+    </PubMask>
   </div>
 </template>
 
@@ -88,11 +103,15 @@ import momentDurationFormatSetup from 'moment-duration-format'
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
 import { isAliPayApp } from '@/utils/tool'
+import PubMask from '@/component/pub_mask'
 
 momentDurationFormatSetup(moment)
 
 export default {
   name: 'AliPay',
+  components: {
+    PubMask,
+  },
   data() {
     return {
       // tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
@@ -105,6 +124,7 @@ export default {
       openlink: null,
       isAlipay: false,
       isHasAuthCode: false,
+      isShowMask: false,
     }
   },
 
@@ -526,6 +546,38 @@ export default {
     }
     .ali {
       background: #3477ff;
+    }
+  }
+
+  .mask {
+    // position: absolute;
+    // color: red;
+    text-align: right;
+    padding-right: 63px;
+    .first {
+      >img {
+        width: 312px;
+        height: 220px;
+        // display: inline-block;
+      }
+    }
+
+    .second {
+      // text-align: right;
+      margin-top: 360px;
+      >img {
+        width: 408px;
+        height: 271px;
+      }
+    }
+
+    .iknow {
+      text-align: center;
+      margin-top: 70px;
+      >img {
+        width: 218px;
+        height: 66px;
+      }
     }
   }
 }
