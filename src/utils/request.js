@@ -11,17 +11,17 @@ const request = axios.create({
   timeout: 10000, // request timeout
 })
 
-request.interceptors.request.use(config => {
-  console.log('config+++++++++++', config.data)
-  console.log('config-----------', config)
-  // if (config.data && config.data.token) {
-  //   // config.headers.token = config.data.token
-  //   Object.assign(config.headers, { token: config.data.token })
-  //   // eslint-disable-next-line no-param-reassign
-  //   delete config.data.token
-  // }
-  return Promise.resolve(config)
-})
+// request.interceptors.request.use(config => {
+//   console.log('config+++++++++++', config.data)
+//   console.log('config-----------', config)
+//   // if (config.data && config.data.token) {
+//   //   // config.headers.token = config.data.token
+//   //   Object.assign(config.headers, { token: config.data.token })
+//   //   // eslint-disable-next-line no-param-reassign
+//   //   delete config.data.token
+//   // }
+//   return Promise.resolve(config)
+// })
 
 // response interceptor
 request.interceptors.response.use((res) => (res.status === 200 ? Promise.resolve(res.data) : Promise.reject(res)))

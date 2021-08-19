@@ -102,7 +102,7 @@ import momentDurationFormatSetup from 'moment-duration-format'
 
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
-import { isAliPayApp } from '@/utils/tool'
+import { isAliPayApp, stringify } from '@/utils/tool'
 import PubMask from '@/component/pub_mask'
 
 momentDurationFormatSetup(moment)
@@ -132,6 +132,8 @@ export default {
     const query = this.getQuery()
     this.query = query
 
+    console.log(window.location)
+
     // const { key: token } = this.query
     // api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
     //   console.log('getAliPayUserId_______', res)
@@ -141,11 +143,16 @@ export default {
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
-    const isHasAuthCode = window.location.href.includes('auth_code')
-    this.isHasAuthCode = isHasAuthCode
+    const { href, origin, pathname } = window.location
+    // const isHasAuthCode = href.includes('auth_code')
+    const isNeedJump = !!(href.includes('auth_code') && !href.includes('chInfo'))
+    // this.isHasAuthCode = isHasAuthCode
     if (isAlipay) {
-      if (!isHasAuthCode) {
-        const redirect = window.encodeURIComponent(window.location.href)
+      if (isNeedJump) {
+        const localQuery = JSON.parse(JSON.stringify(this.query))
+        delete localQuery.auth_code
+        const transformUrl = origin + pathname + stringify(localQuery)
+        const redirect = window.encodeURIComponent(transformUrl)
         window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002170686138&scope=auth_base&redirect_uri=${redirect}`
         return
       }

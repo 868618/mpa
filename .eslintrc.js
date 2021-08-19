@@ -21,5 +21,6 @@ module.exports = {
     'global-require': 0,
     'no-plusplus': 0,
     'arrow-parens': 0,
+    'no-return-assign': 0
   },
 };
