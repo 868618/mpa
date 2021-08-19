@@ -163,7 +163,7 @@ export default {
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
       window.ap.hideLoading()
-      console.log('rrr______', rrr)
+      console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
         // this.tradeNO = rrr.info.pagy_channel_txn_ssn
         this.tradeNO = rrr.info.tradeNO
