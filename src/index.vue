@@ -160,7 +160,9 @@ export default {
       const { key } = this.query
       // eslint-disable-next-line camelcase
       const { pay_sn } = this.orderInfo
-      const rrr = await api.getAliPaySsn({ key, pay_sn, payment_code: 'mini_alipay' })
+      const params = { key, pay_sn, payment_code: 'mini_alipay' }
+      console.log('params___', params)
+      const rrr = await api.getAliPaySsn(params)
       console.log('rrr______', rrr)
     }
 
