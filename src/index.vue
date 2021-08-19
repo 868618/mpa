@@ -132,6 +132,7 @@ export default {
   async created() {
     // this.getNewAppId()
     this.query = this.getQuery()
+    await this.getDetail()
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
@@ -166,8 +167,6 @@ export default {
       const rrr = await api.getAliPaySsn(params)
       console.log('rrr______', rrr)
     }
-
-    this.getDetail()
 
     !isAlipay && this.getScheme()
   },
