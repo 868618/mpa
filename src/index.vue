@@ -135,23 +135,21 @@ export default {
     },
   },
 
-  // watch: {
-  //   isHasAuthCode(val) {
-  //     if (val) {
-  //       // eslint-disable-next-line camelcase
-  //       const { auth_code, key: token } = this.query
-  //       api.getAliPayUserId({ auth_code }, { token }).then((res) => {
-  //         console.log('res******************', res)
-  //       // window.ap.tradePay(this.query.auth_code)
-  //       })
-  //     }
-  //   },
-  // },
+  watch: {
+    isHasAuthCode(val) {
+      if (val) {
+        // eslint-disable-next-line camelcase
+        const { auth_code } = this.query
+        api.getAliPayUserId({ auth_code }).then((res) => {
+          console.log('res******************', res)
+        // window.ap.tradePay(this.query.auth_code)
+        })
+      }
+    },
+  },
 
   methods: {
     async getDetail() {
-      // const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
-      // api.getAliPayUserId({ auth_code: '12345' }, { token: this.query.key })
       const res = await api.getDetail(this.query)
 
       if (res.code === 200) {
