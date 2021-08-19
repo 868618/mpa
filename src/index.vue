@@ -163,10 +163,10 @@ export default {
       // const res = await api.getDetail(this.query)
       // console.log('res**************', res)
       // eslint-disable-next-line camelcase
-      const { auth_code } = this.query
+      const { auth_code, key: token } = this.query
       // eslint-disable-next-line no-underscore-dangle
       const _this = this
-      api.getAliPayUserId({ auth_code }).then((res) => {
+      api.getAliPayUserId({ auth_code }, { token }).then((res) => {
         console.log('res******************', res)
         if (res.code === 200) {
           window.ap.tradePay(_this.query.auth_code)
