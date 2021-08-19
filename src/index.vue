@@ -136,7 +136,7 @@ export default {
     api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
       console.log('getAliPayUserId_______', res)
     }).catch(err => {
-      console.log('000000000000', err)
+      console.log('8888888888000000000000', err)
     })
 
     const isAlipay = isAliPayApp()
