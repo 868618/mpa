@@ -14,12 +14,12 @@ const request = axios.create({
 request.interceptors.request.use(config => {
   console.log('config+++++++++++', config.data)
   console.log('config-----------', config)
-  if (config.data && config.data.token) {
-    // config.headers.token = config.data.token
-    Object.assign(config.headers, { token: config.data.token })
-    // eslint-disable-next-line no-param-reassign
-    delete config.data.token
-  }
+  // if (config.data && config.data.token) {
+  //   // config.headers.token = config.data.token
+  //   Object.assign(config.headers, { token: config.data.token })
+  //   // eslint-disable-next-line no-param-reassign
+  //   delete config.data.token
+  // }
   return Promise.resolve(config)
 })
 
