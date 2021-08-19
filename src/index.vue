@@ -132,13 +132,12 @@ export default {
     const query = this.getQuery()
     this.query = query
 
-    // const { key: token } = this.query
-
-    // api.getAliPayUserId({ auth_code: '8889999' }, { token }).then(res => {
-    //   console.log('getAliPayUserId_______', res)
-    // }).catch(err => {
-    //   console.log('000000000000', err)
-    // })
+    const { key: token } = this.query
+    api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
+      console.log('getAliPayUserId_______', res)
+    }).catch(err => {
+      console.log('000000000000', err)
+    })
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
@@ -151,19 +150,27 @@ export default {
         return
       }
       // eslint-disable-next-line camelcase
-      const { auth_code, key: token } = this.query
+      // const { auth_code, key: token } = this.query
 
-      console.log('token------------------------', token)
-      console.log('auth_code------------------------', auth_code)
-      // eslint-disable-next-line no-underscore-dangle
-      const _this = this
-      api.getAliPayUserId({ auth_code }, { token }).then((res) => {
-        console.log('res******************', res)
-        if (res.code === 200) {
-          window.ap.tradePay(_this.query.auth_code)
-        }
-      }).catch(error => {
-        console.log('error____________', error)
+      // console.log('token------------------------', token)
+      // console.log('auth_code------------------------', auth_code)
+      // // eslint-disable-next-line no-underscore-dangle
+      // const _this = this
+      // api.getAliPayUserId({ auth_code }, { token }).then((res) => {
+      //   console.log('res******************', res)
+      //   if (res.code === 200) {
+      //     window.ap.tradePay(_this.query.auth_code)
+      //   }
+      // }).catch(error => {
+      //   console.log('error____________', error)
+      // })
+
+      // eslint-disable-next-line no-shadow
+      const { key: token } = this.query
+      api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
+        console.log('getAliPayUserId_______', res)
+      }).catch(err => {
+        console.log('000000000000', err)
       })
     }
 
