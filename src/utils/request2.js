@@ -9,6 +9,9 @@ console.log('baseURL----------', process.env)
 const request = axios.create({
   baseURL: VUE_APP_BASE_URL, // url = base url + request url
   timeout: 10000, // request timeout
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
 })
 
 // request.interceptors.request.use(config => {

@@ -100,6 +100,7 @@
 import moment from 'moment'
 import momentDurationFormatSetup from 'moment-duration-format'
 
+import qs from 'qs'
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
 import { isAliPayApp, stringify } from '@/utils/tool'
@@ -160,7 +161,7 @@ export default {
       // eslint-disable-next-line camelcase
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
-      const rrr = await api.getAliPaySsn(params)
+      const rrr = await api.getAliPaySsn(qs.stringify(params))
       console.log('rrr______', rrr)
     }
 
