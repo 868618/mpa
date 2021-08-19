@@ -11,17 +11,20 @@ const request = axios.create({
   timeout: 10000, // request timeout
 })
 
-// request.interceptors.request.use(config => {
-//   console.log('config+++++++++++', config.data)
-//   console.log('config-----------', config)
-//   // if (config.data && config.data.token) {
-//   //   // config.headers.token = config.data.token
-//   //   Object.assign(config.headers, { token: config.data.token })
-//   //   // eslint-disable-next-line no-param-reassign
-//   //   delete config.data.token
-//   // }
-//   return Promise.resolve(config)
-// })
+request.interceptors.request.use(config => {
+  console.log('config+++++++++++', config)
+  const localConfig = {}
+  if (config.url === '/cmobile/index.php?app=pay&mod=pay_new_xcx') {
+    console.log('8888')
+    const { headers } = config
+    Object.assign(headers, { 'Content-Type': 'application/x-www-form-urlencoded' })
+    Object.assign(config, { headers })
+    Object.assign(localConfig, config)
+  } else {
+    Object.assign(localConfig, config)
+  }
+  return Promise.resolve(localConfig)
+})
 
 // response interceptor
 request.interceptors.response.use((res) => (res.status === 200 ? Promise.resolve(res.data) : Promise.reject(res)))
