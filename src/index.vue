@@ -159,8 +159,8 @@ export default {
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
 
-      // console.log('token------------------------', token)
-      // console.log('auth_code------------------------', auth_code)
+      console.log('token------------------------', token)
+      console.log('auth_code------------------------', auth_code)
       // eslint-disable-next-line no-underscore-dangle
       const _this = this
       api.getAliPayUserId({ auth_code, token }).then((res) => {
