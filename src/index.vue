@@ -107,14 +107,11 @@ export default {
       isHasAuthCode: false,
     }
   },
-  beforeCreate() {
-    // const ua = window.navigator.userAgent.toLowerCase()
-    console.log('网页地址是：', window.location.href)
-    console.log('ua---------------------', isAliPayApp())
-    console.log('auth_code---------------------', window.location.href.includes('auth_code'))
-  },
 
   created() {
+    const query = this.getQuery()
+    this.query = query
+
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
     const isHasAuthCode = window.location.href.includes('auth_code')
@@ -139,7 +136,6 @@ export default {
   },
 
   async mounted() {
-    console.log('this.tradePay--------', window.ap.tradePay)
     /*
         有支付宝回传的码的时候去唤起支付
       */
@@ -155,11 +151,8 @@ export default {
   methods: {
     async getDetail() {
       // const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
-      const query = this.getQuery()
-
-      console.log('传进来的参数', query)
-      this.query = query
-      const res = await api.getDetail(query)
+      // api.getAliPayUserId({ auth_code: '12345' }, { token: this.query.key })
+      const res = await api.getDetail(this.query)
 
       if (res.code === 200) {
         const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
