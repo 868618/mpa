@@ -165,8 +165,8 @@ export default {
       window.ap.hideLoading()
       console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
-        this.tradeNO = rrr.info.pagy_channel_txn_ssn
-        // window.ap.tradePay({ tradeNO: rrr.info.pagy_channel_txn_ssn })
+        // this.tradeNO = rrr.info.pagy_channel_txn_ssn
+        this.tradeNO = rrr.info.tradeNO
         this.payNow()
       }
     }
