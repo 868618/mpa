@@ -204,8 +204,13 @@ export default {
     payNow() {
       const { tradeNO } = this
       console.log('tradeNO', tradeNO)
-      window.ap.tradePay({ tradeNO: this.tradeNO }, res => {
-        console.log('tradePay_______', res)
+      // window.ap.tradePay({ tradeNO: this.tradeNO }, res => {
+      //   console.log('tradePay_______', res)
+      // })
+      window.AlipayJSBridge.tradePay({
+        tradeNO,
+      }, res => {
+        console.log('res___', res)
       })
     },
 
