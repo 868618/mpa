@@ -1,11 +1,12 @@
 import Http from '@/utils/http'
 
 class Api extends Http {
-  getDetail(params) {
+  getDetail(params, headers = { abc: 123 }) {
     return this.request({
       url: '/cmobile/index.php?app=userorder&mod=order_info_xcx',
       params,
       method: 'get',
+      headers,
     })
   }
 
