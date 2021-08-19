@@ -202,7 +202,11 @@ export default {
     },
 
     payNow() {
-      window.ap.tradePay({ tradeNO: this.tradeNO })
+      // window.ap.tradePay({ tradeNO: this.tradeNO })
+      const { tradeNO } = this
+      window.AlipayJSBridge.call('tradePay', {
+        tradeNO,
+      })
     },
 
     toWeChat() {
