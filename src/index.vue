@@ -163,12 +163,8 @@ export default {
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
       window.ap.hideLoading()
-      console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
-        // this.tradeNO = rrr.info.pagy_channel_txn_ssn
         this.tradeNO = rrr.info.tradeNo
-
-        console.log('this.tradeNO%%%%%%%%%%', this.tradeNO)
         this.$nextTick(() => {
           this.payNow()
         })
@@ -207,14 +203,9 @@ export default {
 
     payNow() {
       const { tradeNO } = this
-      console.log('tradeNO_______', tradeNO)
-      // window.ap.tradePay({ tradeNO: this.tradeNO }, res => {
-      //   console.log('tradePay_______', res)
-      // })
-
       this.ready(() => {
-        window.AlipayJSBridge.call('tradePay', { tradeNO }, (data) => {
-          console.log('data______', data)
+        window.AlipayJSBridge.call('tradePay', { tradeNO }, res => {
+          console.log('支付结果', res)
         })
       })
     },
@@ -237,9 +228,7 @@ export default {
 
     loopRefreshTime(time) {
       const m = moment.duration(time, 's')
-      const remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
-      // console.log('-----------', remaining)
-      this.remaining = remaining
+      this.remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
 
       if (time) {
         setTimeout(this.loopRefreshTime, 1000, time - 1)
@@ -253,18 +242,16 @@ export default {
     },
 
     async getScheme() {
-      console.log(`share_id=${this.query.share_id}`, '000000000000')
-      const query = `share_id=${this.query.share_id}`
+      // const query = ''
       const res = await api.getScheme({
-        path: '/salesman/pages/usersCheck/index',
-        query,
+        path: 'pages/order/order',
+        query: '',
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
         expire_time: 1630132832,
       })
 
-      console.log('res0000000000000', res)
       if (res.code === 200) {
         this.openlink = res.data.openlink
       }
@@ -281,7 +268,6 @@ export default {
 
     async getNewAppId() {
       const res = await api.getNewAppId()
-      console.log('res6666666666', res)
       if (res.code === 200) {
         this.app_id = res.data.app_id
       }
