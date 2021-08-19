@@ -155,6 +155,7 @@ export default {
       const { auth_code, key: token } = this.query
       try {
         const upLoadAuthCode = await api.getAliPayUserId({ auth_code, token })
+        console.log('upLoadAuthCode', upLoadAuthCode)
         if (upLoadAuthCode.code === 200) {
           const { key } = this.query
           // eslint-disable-next-line camelcase
