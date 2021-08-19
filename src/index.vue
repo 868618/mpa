@@ -126,6 +126,7 @@ export default {
       isHasAuthCode: false,
       isShowMask: false,
       app_id: null,
+      tradeNO: null,
     }
   },
 
@@ -164,7 +165,9 @@ export default {
       window.ap.hideLoading()
       console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
-        window.ap.tradePay({ tradeNO: rrr.info.pagy_channel_txn_ssn })
+        this.tradeNO = rrr.info.pagy_channel_txn_ssn
+        // window.ap.tradePay({ tradeNO: rrr.info.pagy_channel_txn_ssn })
+        this.payNow()
       }
     }
 
@@ -199,7 +202,7 @@ export default {
     },
 
     payNow() {
-      window.ap.tradePay(this.query.auth_code)
+      window.ap.tradePay({ tradeNO: this.tradeNO })
     },
 
     toWeChat() {
