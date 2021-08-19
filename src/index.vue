@@ -138,12 +138,16 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     console.log('this.tradePay--------', window.ap.tradePay)
     /*
         有支付宝回传的码的时候去唤起支付
       */
     if (this.isHasAuthCode) {
+      // eslint-disable-next-line camelcase
+      const { auth_code, key: token } = this.query
+      const res = await api.getAliPayUserId({ auth_code }, { token })
+      console.log('res______', res)
       window.ap.tradePay(this.query.auth_code)
     }
   },
