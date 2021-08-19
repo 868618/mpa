@@ -22,7 +22,7 @@ class Api extends Http {
       url: '/api/frontend/member/update_alipay_user_id',
       params,
       headers,
-      method: 'post',
+      method: 'get',
     })
   }
 }
