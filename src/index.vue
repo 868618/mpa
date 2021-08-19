@@ -155,15 +155,11 @@ export default {
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
       const result = await api.getAliPayUserId({ auth_code, token })
-      console.log('result', result)
       if (result.code !== 200) return
       const { key } = this.query
-      console.log(999)
       // eslint-disable-next-line camelcase
       const { pay_sn } = this.orderInfo
-      console.log(888)
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
-      console.log('params___', params)
       const rrr = await api.getAliPaySsn(params)
       console.log('rrr______', rrr)
     }
