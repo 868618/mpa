@@ -74,7 +74,7 @@
     </div>
 
     <div class="btn">
-      <div class="left" v-if="!isAlipay" @click="toWeChat"><p>返回微信小程序</p></div>
+      <div class="left"  @click="toWeChat"><p>返回<span v-if="!isAlipay">微信</span>小程序</p></div>
 
       <div class="right ali" @click="toAliPay"><p>支付宝支付888</p></div>
     </div>
@@ -198,11 +198,23 @@ export default {
     },
 
     toAliPay() {
+      if (isAliPayApp) {
+        this.payNow()
+        return
+      }
       const url = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
       window.location.href = url
     },
 
+    payNow() {
+      window.ap.tradePay(this.query.auth_code)
+    },
+
     toWeChat() {
+      if (isAliPayApp) {
+        this.isShowMask = true
+        return
+      }
       window.location.href = this.openlink
     },
 
