@@ -17,10 +17,10 @@ class Api extends Http {
     })
   }
 
-  getAliPayUserId(data, headers = {}) {
+  getAliPayUserId(params, headers = {}) {
     return this.request({
       url: '/api/frontend/member/update_alipay_user_id',
-      data,
+      params,
       headers,
       method: 'post',
     })

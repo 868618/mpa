@@ -76,7 +76,7 @@
     <div class="btn">
       <div class="left" v-if="!isAlipay" @click="toWeChat"><p>返回微信小程序666</p></div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付999</p></div>
     </div>
   </div>
 </template>
