@@ -76,7 +76,7 @@
     <div class="btn">
       <div class="left"  @click="toWeChat"><p>返回<span v-if="!isAlipay">微信</span>小程序</p></div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付999</p></div>
     </div>
 
     <PubMask v-if="isShowMask">
