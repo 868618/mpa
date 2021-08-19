@@ -164,9 +164,13 @@ export default {
       // console.log('res**************', res)
       // eslint-disable-next-line camelcase
       const { auth_code } = this.query
+      // eslint-disable-next-line no-underscore-dangle
+      const _this = this
       api.getAliPayUserId({ auth_code }).then((res) => {
         console.log('res******************', res)
-        window.ap.tradePay(this.query.auth_code)
+        if (res.code === 200) {
+          window.ap.tradePay(_this.query.auth_code)
+        }
       }).catch(error => {
         console.log('error____________', error)
       })
