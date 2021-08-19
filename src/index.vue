@@ -156,8 +156,8 @@ export default {
       const result = await api.getAliPayUserId({ auth_code, token })
       console.log('result', result)
       if (result.code !== 200) return
-      console.log(999)
       const { key } = this.query
+      console.log(999)
       // eslint-disable-next-line camelcase
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
