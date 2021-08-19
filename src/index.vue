@@ -125,61 +125,44 @@ export default {
       isAlipay: false,
       isHasAuthCode: false,
       isShowMask: false,
+      app_id: null,
     }
   },
 
-  created() {
-    const query = this.getQuery()
-    this.query = query
-
-    console.log(window.location)
-
-    // const { key: token } = this.query
-    // api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
-    //   console.log('getAliPayUserId_______', res)
-    // }).catch(err => {
-    //   console.log('8888888888000000000000', err)
-    // })
+  async created() {
+    // this.getNewAppId()
+    this.query = this.getQuery()
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
     const { href, origin, pathname } = window.location
-    // const isHasAuthCode = href.includes('auth_code')
-    // const isNeedJump = !!(href.includes('auth_code') && !href.includes('chInfo'))
     const isNeedJump = !href.includes('auth_code')
-    // this.isHasAuthCode = isHasAuthCode
     if (isAlipay) {
       if (isNeedJump) {
         const localQuery = JSON.parse(JSON.stringify(this.query))
         delete localQuery.auth_code
+        delete localQuery.chInfo
         const transformUrl = origin + pathname + stringify(localQuery)
         const redirect = window.encodeURIComponent(transformUrl)
-        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002170686138&scope=auth_base&redirect_uri=${redirect}`
+
+        await this.getQuery()
+        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
         return
       }
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
 
-      console.log('token------------------------', token)
-      console.log('auth_code------------------------', auth_code)
       // eslint-disable-next-line no-underscore-dangle
-      const _this = this
-      api.getAliPayUserId({ auth_code, token }).then((res) => {
-        console.log('res******************', res)
-        if (res.code === 200) {
-          window.ap.tradePay(_this.query.auth_code)
-        }
-      }).catch(error => {
-        console.log('error____________', error)
-      })
+      // const _this = this
+      const upLoadAuthCode = await api.getAliPayUserId({ auth_code, token })
+      if (upLoadAuthCode.code === 200) {
+        const { key } = this.query
+        // eslint-disable-next-line camelcase
+        const { pay_sn } = this.orderInfo
+        const rrr = await api.getAliPaySsn({ key, pay_sn, payment_code: 'mini_alipay' })
 
-      // eslint-disable-next-line no-shadow
-      // const { key: token } = this.query
-      // api.getAliPayUserId({ auth_code: 'e60bd076092046c480feccd274e5PA00' }, { token }).then(res => {
-      //   console.log('getAliPayUserId_______', res)
-      // }).catch(err => {
-      //   console.log('000000000000', err)
-      // })
+        console.log('rrr______', rrr)
+      }
     }
 
     this.getDetail()
@@ -268,6 +251,14 @@ export default {
 
     closeMask() {
       this.isShowMask = false
+    },
+
+    async getNewAppId() {
+      const res = await api.getNewAppId()
+      console.log('res6666666666', res)
+      if (res.code === 200) {
+        this.app_id = res.data.app_id
+      }
     },
   },
 }

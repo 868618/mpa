@@ -24,6 +24,20 @@ class Api extends Http {
       method: 'post',
     })
   }
+
+  getNewAppId() {
+    return this.request({
+      url: '/api/frontend/alipay/config_info',
+    })
+  }
+
+  getAliPaySsn(data) {
+    return this.request({
+      url: '/cmobile/index.php?app=pay&mod=pay_new_xcx',
+      data,
+      method: 'post',
+    })
+  }
 }
 
 export default new Api()
