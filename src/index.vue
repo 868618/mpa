@@ -145,7 +145,8 @@ export default {
     this.isAlipay = isAlipay
     const { href, origin, pathname } = window.location
     // const isHasAuthCode = href.includes('auth_code')
-    const isNeedJump = !!(href.includes('auth_code') && !href.includes('chInfo'))
+    // const isNeedJump = !!(href.includes('auth_code') && !href.includes('chInfo'))
+    const isNeedJump = !href.includes('auth_code')
     // this.isHasAuthCode = isHasAuthCode
     if (isAlipay) {
       if (isNeedJump) {
