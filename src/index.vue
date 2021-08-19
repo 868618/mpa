@@ -159,7 +159,7 @@ export default {
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
-      console.log('rrr______', rrr)
+      console.log('rrr______', rrr.info.tradeNo)
       if (rrr.state === 200) {
         window.ap.tradePay(rrr.info.tradeNo)
       }
