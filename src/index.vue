@@ -76,7 +76,7 @@
     <div class="btn">
       <div class="left"  @click="toWeChat"><p>返回<span v-if="!isAlipay">微信</span>小程序</p></div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付888</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
     </div>
 
     <PubMask v-if="isShowMask">
@@ -198,7 +198,7 @@ export default {
     },
 
     toAliPay() {
-      if (isAliPayApp) {
+      if (this.isAlipay) {
         this.payNow()
         return
       }
@@ -211,7 +211,7 @@ export default {
     },
 
     toWeChat() {
-      if (isAliPayApp) {
+      if (this.isAlipay) {
         this.isShowMask = true
         return
       }
