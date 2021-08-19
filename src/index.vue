@@ -138,14 +138,15 @@ export default {
   watch: {
     isHasAuthCode(val) {
       if (val) {
+        this.getDetail()
         // eslint-disable-next-line camelcase
-        const { auth_code } = this.query
-        api.getAliPayUserId({ auth_code }).then((res) => {
-          console.log('res******************', res)
-        // window.ap.tradePay(this.query.auth_code)
-        }).catch(error => {
-          console.log('error____________', error)
-        })
+        // const { auth_code } = this.query
+        // api.getAliPayUserId({ auth_code }).then((res) => {
+        //   console.log('res******************', res)
+        // // window.ap.tradePay(this.query.auth_code)
+        // }).catch(error => {
+        //   console.log('error____________', error)
+        // })
       }
     },
   },
