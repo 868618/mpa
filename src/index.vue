@@ -150,24 +150,6 @@ export default {
         window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002170686138&scope=auth_base&redirect_uri=${redirect}`
         return
       }
-    }
-
-    this.getDetail()
-
-    !isAlipay && this.getScheme()
-  },
-
-  computed: {
-    countDown() {
-      return this.orderInfo.cut_off_tips.replace('###', `<span style="color: #f1270d;min-width:60px;text-align: center;">${this.remaining}</span>`)
-    },
-  },
-
-  async mounted() {
-    if (this.isHasAuthCode) {
-      // this.getDetail()
-      // const res = await api.getDetail(this.query)
-      // console.log('res**************', res)
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
 
@@ -184,6 +166,16 @@ export default {
         console.log('error____________', error)
       })
     }
+
+    this.getDetail()
+
+    !isAlipay && this.getScheme()
+  },
+
+  computed: {
+    countDown() {
+      return this.orderInfo.cut_off_tips.replace('###', `<span style="color: #f1270d;min-width:60px;text-align: center;">${this.remaining}</span>`)
+    },
   },
 
   methods: {
