@@ -142,9 +142,15 @@ export default {
     if (this.isHasAuthCode) {
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
-      const res = await api.getAliPayUserId({ auth_code }, { token })
-      console.log('res______', res)
-      window.ap.tradePay(this.query.auth_code)
+
+      api.getAliPayUserId({ auth_code }, { token }).then((res) => {
+        console.log('res******************', res)
+        window.ap.tradePay(this.query.auth_code)
+      })
+
+      // const res = await api.getAliPayUserId({ auth_code }, { token })
+      // console.log('res______', res)
+      // window.ap.tradePay(this.query.auth_code)
     }
   },
 
