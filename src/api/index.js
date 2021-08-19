@@ -33,7 +33,7 @@ class Api extends Http {
 
   getAliPaySsn(data) {
     return this.request({
-      url: '/cmobile/index.php?app=pay&mod=pay_new_xcx?key=3af2172167b7a3af185f9c7167088019',
+      url: '/cmobile/index.php?app=pay&mod=pay_new_xcx',
       data,
       method: 'post',
     })
