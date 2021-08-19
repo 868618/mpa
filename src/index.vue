@@ -161,7 +161,7 @@ export default {
       const rrr = await api.getAliPaySsn(qs.stringify(params))
       console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
-        window.ap.tradePay(rrr.info.tradeNo)
+        window.ap.tradePay(rrr.info.pagy_channel_txn_ssn)
       }
     }
 
