@@ -167,7 +167,11 @@ export default {
       if (rrr.state === 200) {
         // this.tradeNO = rrr.info.pagy_channel_txn_ssn
         this.tradeNO = rrr.info.tradeNO
-        this.payNow()
+
+        console.log('this.tradeNO%%%%%%%%%%', this.tradeNO)
+        this.$nextTick(() => {
+          this.payNow()
+        })
       }
     }
 
