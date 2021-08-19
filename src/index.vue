@@ -112,6 +112,8 @@ export default {
     const query = this.getQuery()
     this.query = query
 
+    api.getAliPayUserId({ auth_code: '8889999' }, { token: '777' })
+
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
     const isHasAuthCode = window.location.href.includes('auth_code')
