@@ -76,7 +76,7 @@
     <div class="btn">
       <div class="left" v-if="!isAlipay" @click="toWeChat"><p>返回微信小程序666</p></div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
+      <div class="right ali" @click="toAliPay"><p>支付宝支付444</p></div>
     </div>
   </div>
 </template>
@@ -135,17 +135,19 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     if (this.isHasAuthCode) {
       // this.getDetail()
+      const res = await api.getDetail(this.query)
+      console.log('res**************', res)
       // eslint-disable-next-line camelcase
-      const { auth_code } = this.query
-      api.getAliPayUserId({ auth_code }).then((res) => {
-        console.log('res******************', res)
-        window.ap.tradePay(this.query.auth_code)
-      }).catch(error => {
-        console.log('error____________', error)
-      })
+      // const { auth_code } = this.query
+      // api.getAliPayUserId({ auth_code }).then((res) => {
+      //   console.log('res******************', res)
+      //   window.ap.tradePay(this.query.auth_code)
+      // }).catch(error => {
+      //   console.log('error____________', error)
+      // })
     }
   },
 
