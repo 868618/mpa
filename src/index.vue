@@ -145,7 +145,7 @@ export default {
         const transformUrl = origin + pathname + stringify(localQuery)
         const redirect = window.encodeURIComponent(transformUrl)
 
-        await this.getQuery()
+        await this.getNewAppId()
         console.log('this.app_id7777777777777777', this.app_id)
         console.log('this.redirect', redirect)
         // window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
