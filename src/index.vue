@@ -99,8 +99,8 @@
 <script>
 import moment from 'moment'
 import momentDurationFormatSetup from 'moment-duration-format'
-
 import qs from 'qs'
+
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
 import { isAliPayApp, stringify } from '@/utils/tool'
@@ -115,7 +115,6 @@ export default {
   },
   data() {
     return {
-      // tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
       location,
       shop,
       orderInfo: null,
@@ -148,8 +147,6 @@ export default {
         const redirect = window.encodeURIComponent(transformUrl)
 
         await this.getNewAppId()
-        // console.log('this.app_id7777777777777777', this.app_id)
-        // console.log('this.redirect', redirect)
         window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
         return
       }
@@ -163,6 +160,9 @@ export default {
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
       console.log('rrr______', rrr)
+      if (rrr.state === 200) {
+        window.ap.tradePay(rrr.info.tradeNo)
+      }
     }
 
     !isAlipay && this.getScheme()
