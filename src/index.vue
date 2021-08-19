@@ -126,7 +126,7 @@ export default {
       isHasAuthCode: false,
       isShowMask: false,
       app_id: null,
-      tradeNo: null,
+      tradeNO: null,
     }
   },
 
@@ -166,9 +166,9 @@ export default {
       console.log('rrr______', rrr.info)
       if (rrr.state === 200) {
         // this.tradeNO = rrr.info.pagy_channel_txn_ssn
-        this.tradeNo = rrr.info.tradeNo
+        this.tradeNO = rrr.info.tradeNo
 
-        console.log('this.tradeNO%%%%%%%%%%', this.tradeNo)
+        console.log('this.tradeNO%%%%%%%%%%', this.tradeNO)
         this.$nextTick(() => {
           this.payNow()
         })
@@ -206,14 +206,14 @@ export default {
     },
 
     payNow() {
-      const { tradeNo } = this
-      console.log('tradeNO_______', tradeNo)
+      const { tradeNO } = this
+      console.log('tradeNO_______', tradeNO)
       // window.ap.tradePay({ tradeNO: this.tradeNO }, res => {
       //   console.log('tradePay_______', res)
       // })
 
       this.ready(() => {
-        window.AlipayJSBridge.call('tradePay', { tradeNo }, (data) => {
+        window.AlipayJSBridge.call('tradePay', { tradeNO }, (data) => {
           console.log('data______', data)
         })
       })
