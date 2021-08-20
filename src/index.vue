@@ -131,10 +131,12 @@ export default {
       isShowMask: false,
       app_id: null,
       tradeNO: null,
+      isNeedJump: true,
     }
   },
 
   async created() {
+    this.visibilitychange()
     // this.getNewAppId()
     this.query = this.getQuery()
     await this.getDetail()
@@ -143,6 +145,7 @@ export default {
     this.isAlipay = isAlipay
     const { href, origin, pathname } = window.location
     const isNeedJump = !href.includes('auth_code')
+    this.isNeedJump = isNeedJump
     if (isAlipay) {
       if (isNeedJump) {
         const localQuery = JSON.parse(JSON.stringify(this.query))
@@ -189,6 +192,16 @@ export default {
   },
 
   methods: {
+    visibilitychange() {
+      document.addEventListener('visibilitychange', () => {
+        // 用户打开或回到页面
+        if (document.visibilityState === 'visible') {
+          // 页面可见
+          console.log('页面可见')
+          this.getDetail()
+        }
+      })
+    },
     async getDetail() {
       const res = await api.getDetail(this.query)
 
