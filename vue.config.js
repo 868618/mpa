@@ -1,8 +1,9 @@
 const pxtorem = require('postcss-pxtorem')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const path = require('path')
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { IgnorePlugin } = require('webpack')
+// const { IgnorePlugin } = require('webpack')
 
 const { ANALYZER, CONSOLE } = process.env
 
@@ -48,7 +49,7 @@ module.exports = {
     /*
       优化moment库打包体积
     */
-    config.plugin('moment').use(IgnorePlugin, [/^\.\/locale$/, /moment$/])
+    // config.plugin('moment').use(IgnorePlugin, [/^\.\/locale$/, /moment$/])
   },
 
   devServer: {
@@ -60,6 +61,7 @@ module.exports = {
     //     pathRewrite: { '^/': '' },
     //   },
     // },
+    contentBase: path.resolve(__dirname, 'dist'),
     proxy: 'http://mall-bsy.vxwei.com/',
   },
 };

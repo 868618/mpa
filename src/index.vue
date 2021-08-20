@@ -74,9 +74,13 @@
     </div>
 
     <div class="btn">
-      <div class="left"  @click="toWeChat"><p>返回<span v-if="!isAlipay">微信</span>小程序</p></div>
+      <div class="left" @click="toWeChat" :style="{ flex: isPayed ? 1 : 'none' }">
+        <p>返回<span v-if="!isAlipay">微信</span>小程序</p>
+      </div>
 
-      <div class="right ali" @click="toAliPay"><p>支付宝支付</p></div>
+      <div class="right ali" @click="toAliPay" v-if="!isPayed">
+        <p>支付宝支付</p>
+      </div>
     </div>
 
     <PubMask v-if="isShowMask">
@@ -97,16 +101,16 @@
 </template>
 
 <script>
-import moment from 'moment'
-import momentDurationFormatSetup from 'moment-duration-format'
+// import moment from 'moment'
+// import momentDurationFormatSetup from 'moment-duration-format'
 import qs from 'qs'
 
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
-import { isAliPayApp, stringify } from '@/utils/tool'
+import { isAliPayApp, stringify, secondToTime } from '@/utils/tool'
 import PubMask from '@/component/pub_mask'
 
-momentDurationFormatSetup(moment)
+// momentDurationFormatSetup(moment)
 
 export default {
   name: 'AliPay',
@@ -178,6 +182,10 @@ export default {
     countDown() {
       return this.orderInfo.cut_off_tips.replace('###', `<span style="color: #f1270d;min-width:60px;text-align: center;">${this.remaining}</span>`)
     },
+
+    isPayed() {
+      return this.orderInfo && Number(this.orderInfo.order_state) >= 20
+    },
   },
 
   methods: {
@@ -202,10 +210,14 @@ export default {
     },
 
     payNow() {
+      const _this = this
       const { tradeNO } = this
       this.ready(() => {
-        window.AlipayJSBridge.call('tradePay', { tradeNO }, res => {
-          console.log('支付结果', res)
+        window.AlipayJSBridge.call('tradePay', { tradeNO }, ({ resultCode }) => {
+          console.log('支付结果', resultCode)
+          if (resultCode === '9000') {
+            _this.getDetail()
+          }
         })
       })
     },
@@ -227,8 +239,9 @@ export default {
     },
 
     loopRefreshTime(time) {
-      const m = moment.duration(time, 's')
-      this.remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
+      // const m = moment.duration(time, 's')
+      // this.remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
+      this.remaining = secondToTime(time)
 
       if (time) {
         setTimeout(this.loopRefreshTime, 1000, time - 1)
@@ -439,8 +452,8 @@ export default {
           .good_img {
             width: 162px;
             height: 162px;
+            border-radius: 6px;
             overflow: hidden;
-            background: chartreuse;
             > img {
               width: 100%;
             }
@@ -569,10 +582,11 @@ export default {
     box-shadow: 0px -7px 8px 0px rgba(239, 239, 239, 0.5);
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     font-size: 30px;
     font-weight: 400;
     color: #ffffff;
+    padding: 0 27px;
     > div {
       width: 338px;
       height: 88px;
@@ -582,6 +596,7 @@ export default {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      // flex: 1;
     }
     .ali {
       background: #3477ff;
