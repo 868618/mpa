@@ -204,7 +204,7 @@ export default {
       })
     },
     async getDetail() {
-      const res = await api.getDetail(this.query)
+      const res = await api.getDetail({ ...this.query, client: 'h5' })
 
       if (res.code === 200) {
         const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
@@ -402,6 +402,7 @@ export default {
         font-size: 28px;
         max-width: 100%;
         overflow: hidden;
+        width: 100%;
 
         .name {
           color: #999999;
@@ -417,7 +418,7 @@ export default {
           white-space: nowrap;
           text-overflow: ellipsis;
           // background: red;
-          max-width: calc(100% - 100px);
+          max-width: calc(100% - 80px);
         }
       }
     }
