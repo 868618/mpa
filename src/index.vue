@@ -50,12 +50,12 @@
     <div class="order_detail">
       <ul class="order_detail_box">
         <li class="order_detail_item">
-          <p class="left">下单时间</p>
+          <p class="left">下单时间：</p>
           <p class="right">{{ orderInfo.add_time }}</p>
         </li>
 
         <li class="order_detail_item">
-          <p class="left">支付方式</p>
+          <p class="left">支付方式：</p>
           <p class="right">{{ orderInfo.payment_name }}</p>
         </li>
 
@@ -78,7 +78,7 @@
         <p>返回<span v-if="!isAlipay">微信</span>小程序</p>
       </div>
 
-      <div class="right ali" @click="toAliPay" v-if="!isPayed">
+      <div class="right ali" @click="toAliPay" v-if="!isPayed && orderInfo.order_state !== '0'">
         <p>支付宝支付</p>
       </div>
     </div>
@@ -101,16 +101,11 @@
 </template>
 
 <script>
-// import moment from 'moment'
-// import momentDurationFormatSetup from 'moment-duration-format'
 import qs from 'qs'
-
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
 import { isAliPayApp, stringify, secondToTime } from '@/utils/tool'
 import PubMask from '@/component/pub_mask'
-
-// momentDurationFormatSetup(moment)
 
 export default {
   name: 'AliPay',
@@ -187,7 +182,11 @@ export default {
     },
 
     isPayed() {
-      return this.orderInfo && Number(this.orderInfo.order_state) >= 20
+      return this.orderInfo && Number(this.orderInfo.order_state) !== 10
+    },
+
+    isShowAliPayBtn() {
+      return this.orderInfo && this.orderInfo.order_state === '10'
     },
   },
 
@@ -399,6 +398,8 @@ export default {
         margin-left: 23px;
         font-weight: 400;
         font-size: 28px;
+        max-width: 100%;
+        overflow: hidden;
 
         .name {
           color: #999999;
@@ -410,6 +411,11 @@ export default {
         .addr_detail {
           color: #333333;
           margin-top: 10px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          // background: red;
+          max-width: calc(100% - 100px);
         }
       }
     }
