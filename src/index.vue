@@ -109,6 +109,7 @@ import PubMask from '@/component/pub_mask'
 
 export default {
   name: 'AliPay',
+
   components: {
     PubMask,
   },
