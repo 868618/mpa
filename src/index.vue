@@ -4,7 +4,7 @@
     <div class="order_status">
       <template>
         <div class="cancel">
-          <div class="l">订单号：{{ query.order_id }}</div>
+          <div class="l">订单号：{{ orderInfo.order_sn }}</div>
           <div class="r">{{ orderInfo.order_state_name }}</div>
         </div>
       </template>
