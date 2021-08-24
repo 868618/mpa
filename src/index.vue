@@ -61,7 +61,7 @@
 
         <li class="order_detail_item">
           <p class="left">待支付：</p>
-          <p class="right">{{ orderInfo.real_pay_amount }}</p>
+          <p class="right">{{ orderInfo.deposit_amount }}</p>
         </li>
       </ul>
 
@@ -176,6 +176,8 @@ export default {
     }
 
     !isAlipay && this.getScheme()
+
+    this.loopCheckOrderStatus()
   },
 
   computed: {
@@ -253,8 +255,6 @@ export default {
     },
 
     loopRefreshTime(time) {
-      // const m = moment.duration(time, 's')
-      // this.remaining = ['hours', 'minutes', 'seconds'].map((i) => this.format(m[i]())).join(':')
       this.remaining = secondToTime(time)
 
       if (time) {
@@ -297,6 +297,27 @@ export default {
       const res = await api.getNewAppId()
       if (res.code === 200) {
         this.app_id = res.data.app_id
+      }
+    },
+
+    /*
+      轮训查询订单状态
+    */
+
+    async loopCheckOrderStatus() {
+    //  &pay_sn=480675427162297486&key=495bb83d10aa8211ae7043c91e7fea57
+      const { key, order_id } = this.query
+      const { pay_sn } = this.orderInfo
+      const res = await api.checkOrderStatus({ pay_sn, key, order_id })
+
+      if (res.code === 200) {
+        const num = Number(res.datas.order_state)
+        if (num === 10) {
+          setTimeout(this.loopCheckOrderStatus, 5000)
+        } else {
+          console.log('不用再刷新')
+          this.getDetail()
+        }
       }
     },
   },

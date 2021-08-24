@@ -38,6 +38,14 @@ class Api extends Http {
       method: 'post',
     })
   }
+
+  checkOrderStatus(params) {
+    return this.request({
+      url: '/cmobile/index.php?app=userorder&mod=order_pay_status',
+      params,
+      method: 'get',
+    })
+  }
 }
 
 export default new Api()
