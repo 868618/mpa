@@ -139,8 +139,8 @@ export default {
   },
 
   async created() {
+    console.log('000')
     this.visibilitychange()
-    // this.getNewAppId()
     this.query = this.getQuery()
     await this.getDetail()
 
