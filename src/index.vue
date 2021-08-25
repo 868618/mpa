@@ -78,9 +78,12 @@
         <p>返回<span v-if="!isAlipay">微信</span>小程序</p>
       </div>
 
-      <div class="right ali" @click="toAliPay" v-if="!isPayed && orderInfo.order_state !== '0' && !isInWeChat">
-        <p>支付宝支付</p>
-      </div>
+      <template v-if="!isInWeChat">
+        <div class="right ali" @click="toAliPay" v-if="!isPayed && orderInfo.order_state !== '0'">
+          <p>支付宝支付</p>
+        </div>
+      </template>
+
     </div>
 
     <PubMask v-if="isShowMask">
