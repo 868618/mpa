@@ -74,7 +74,7 @@
     </div>
 
     <div class="btn">
-      <div class="left" @click="toWeChat" :style="{ flex: isPayed ? 1 : 'none' }">
+      <div class="left" @click="toWeChat" :style="{ flex: (isPayed || !isInWeChat) ? 1 : 'none' }">
         <p>返回<span v-if="!isAlipay">微信</span>小程序</p>
       </div>
 
