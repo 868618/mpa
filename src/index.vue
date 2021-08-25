@@ -61,7 +61,7 @@
 
         <li class="order_detail_item">
           <p class="left">待支付：</p>
-          <p class="right">{{ orderInfo.deposit_amount }}</p>
+          <p class="right">{{ orderInfo.online_amount }}</p>
         </li>
       </ul>
 
@@ -133,6 +133,7 @@ export default {
   },
 
   async created() {
+    console.log('999')
     this.visibilitychange()
     // this.getNewAppId()
     this.query = this.getQuery()
