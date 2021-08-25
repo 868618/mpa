@@ -29,8 +29,8 @@
         </div>
 
         <ul class="list">
-          <li class="item" v-for="(item, index) in orderInfo.goods_list" :key="index" :class="[{ giftt: index == lineNum }, 'item']">
-            <div class="good_img" :class="{ giftt: Number(item.is_gift) }">
+          <li v-for="(item, index) in orderInfo.list" :key="index" :class="['item', { line: item.line }]">
+            <div class="good_img" :class="{ gift: Number(item.is_gift) }">
               <img :src="item.image_url" />
             </div>
             <div class="good_detail">
@@ -38,7 +38,7 @@
                 {{ item.goods_name }}
               </div>
               <div class="amount">
-                <p class="price"><span>￥</span>{{ item.goods_price }}</p>
+                <p class="price" ><span>￥</span>{{ item.goods_price }}</p>
                 <p class="num">X{{ item.goods_num }}</p>
               </div>
             </div>
@@ -219,9 +219,21 @@ export default {
       const res = await api.getDetail({ ...this.query, client: 'h5' })
 
       if (res.code === 200) {
-        const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
-        this.lineNum = lineNum
-        this.orderInfo = res.datas.order_info
+        const { goods_list } = res.datas.order_info
+        const list = goods_list.reduce((pre, cur, index) => {
+          const _cur = JSON.parse(JSON.stringify(cur))
+          // const line = false
+          if (index >= 1) {
+            const [{ is_gift: preIsGift }] = pre.slice(-1)
+            const { is_gift: curIsGift } = _cur
+            _cur.line = curIsGift === '1' && preIsGift === '0'
+          }
+          return pre.concat(_cur)
+        }, [])
+        console.log('list', list)
+        // const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
+        // this.lineNum = lineNum
+        this.orderInfo = { ...res.datas.order_info, list }
         this.orderInfo.cut_off_time && this.loopRefreshTime(this.orderInfo.cut_off_time)
       }
     },
@@ -487,13 +499,6 @@ export default {
       .list {
         margin-top: 50px;
 
-        .giftt{
-          border-top: 2px dashed #eeeff0;
-          .price {
-            opacity: 0;
-          }
-        }
-
         .item {
           height: 162px;
           overflow: hidden;
@@ -570,6 +575,12 @@ export default {
                 line-height: 1;
               }
             }
+          }
+        }
+        .line {
+          border-top: 2px dashed #eeeff0;
+          .price {
+            opacity: 0;
           }
         }
       }
