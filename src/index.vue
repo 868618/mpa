@@ -139,7 +139,7 @@ export default {
   },
 
   async created() {
-    console.log('000')
+    console.log('000', this.isInWeChat)
     this.visibilitychange()
     this.query = this.getQuery()
     await this.getDetail()
