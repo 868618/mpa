@@ -38,7 +38,7 @@
                 {{ item.goods_name }}
               </div>
               <div class="amount">
-                <p class="price" ><span>￥</span>{{ item.goods_price }}</p>
+                <p class="price" :style="{ opacity: Number(item.is_gift) ? 0 : 1 }"><span>￥</span>{{ item.goods_price }}</p>
                 <p class="num">X{{ item.goods_num }}</p>
               </div>
             </div>
