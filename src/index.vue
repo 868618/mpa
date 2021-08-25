@@ -230,6 +230,7 @@ export default {
     payNow() {
       const _this = this
       const { tradeNO } = this
+      console.log('tradeNO_______', tradeNO)
       this.ready(() => {
         window.AlipayJSBridge.call('tradePay', { tradeNO }, ({ resultCode }) => {
           console.log('支付结果', resultCode)
