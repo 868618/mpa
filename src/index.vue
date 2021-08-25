@@ -164,22 +164,16 @@ export default {
       }
 
       window.ap.showLoading()
-      // eslint-disable-next-line camelcase
-      const { auth_code, key: token } = this.query
+      const { auth_code, key: token, key } = this.query
       const result = await api.getAliPayUserId({ auth_code, token })
       if (result.code !== 200) return
-      const { key } = this.query
-      // eslint-disable-next-line camelcase
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
-      const rrr = await api.getAliPaySsn(qs.stringify(params))
-      console.log('rrr___________', rrr)
+      const res = await api.getAliPaySsn(qs.stringify(params))
       window.ap.hideLoading()
-      if (rrr.state === 200) {
-        this.tradeNO = rrr.info.tradeNo
-        this.$nextTick(() => {
-          this.payNow()
-        })
+      if (res.state === 200) {
+        this.tradeNO = res.info.tradeNo
+        this.$nextTick(this.payNow)
       }
     }
 
