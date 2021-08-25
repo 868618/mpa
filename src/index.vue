@@ -225,8 +225,6 @@ export default {
           return pre.concat(_cur)
         }, [])
         console.log('list', list)
-        // const lineNum = res.datas.order_info.goods_list.findIndex(i => Number(i.is_gift))
-        // this.lineNum = lineNum
         this.orderInfo = { ...res.datas.order_info, list }
         this.orderInfo.cut_off_time && this.loopRefreshTime(this.orderInfo.cut_off_time)
       }
