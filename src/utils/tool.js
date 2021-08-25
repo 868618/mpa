@@ -1,9 +1,9 @@
 const ua = window.navigator.userAgent.toLowerCase()
 
-console.log('ua.match(/MicroMessenger/i)', ua.match(/MicroMessenger/ig))
+console.log('ua.match(/MicroMessenger/i)', ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === 'micromessenger')
 
 const isAliPayApp = () => ua.includes('alipayclient')
-const isWeChat = () => ua.match(/MicroMessenger/i) === 'micromessenger'
+const isWeChat = () => ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === 'micromessenger'
 
 // eslint-disable-next-line no-param-reassign
 const stringify = obj => Object.entries(obj).reduce((pre, cur) => pre += `&${cur.join('=')}`, '').replace(/^./ig, '?')
