@@ -65,11 +65,6 @@
         </li>
       </ul>
 
-      <!-- <div class="amonut">
-        <p class="tip">待支付：</p>
-        <div class="price"><span>￥</span>{{ orderInfo.real_pay_amount }}</div>
-      </div> -->
-
       <div class="tip">注：如有特殊发货需求请联系顾问</div>
     </div>
 
@@ -134,50 +129,44 @@ export default {
 
   async created() {
     this.visibilitychange()
-    // this.getNewAppId()
     this.query = this.getQuery()
     await this.getDetail()
 
     const isAlipay = isAliPayApp()
     this.isAlipay = isAlipay
-    const { href, origin, pathname } = window.location
-    const isNeedJump = !href.includes('auth_code')
+    const isNeedJump = !window.location.href.includes('auth_code')
     this.isNeedJump = isNeedJump
     if (isAlipay) {
       if (isNeedJump) {
-        const localQuery = JSON.parse(JSON.stringify(this.query))
-        delete localQuery.auth_code
-        delete localQuery.chInfo
-        const transformUrl = origin + pathname + stringify(localQuery)
-        const redirect = window.encodeURIComponent(transformUrl)
-
-        await this.getNewAppId()
-        window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
+        this.jumpAndGetAuthCode()
         return
       }
-
+      /*
+        唤起支付的逻辑
+      */
       window.ap.showLoading()
-      // eslint-disable-next-line camelcase
-      const { auth_code, key: token } = this.query
+      const { auth_code, key: token, key } = this.query
+      /*
+        调用一下此接口  后端去用这个传参做支付宝相关逻辑的处理
+      */
       const result = await api.getAliPayUserId({ auth_code, token })
       if (result.code !== 200) return
-      const { key } = this.query
-      // eslint-disable-next-line camelcase
+
       const { pay_sn } = this.orderInfo
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
-      const rrr = await api.getAliPaySsn(qs.stringify(params))
+      const { state, info } = await api.getAliPaySsn(qs.stringify(params))
       window.ap.hideLoading()
-      if (rrr.state === 200) {
-        this.tradeNO = rrr.info.tradeNo
-        this.$nextTick(() => {
-          this.payNow()
-        })
+      if (state === 200) {
+        this.tradeNO = info.tradeNo
+        this.$nextTick(this.payNow)
       }
     }
 
     !isAlipay && this.getScheme()
 
-    this.loopCheckOrderStatus()
+    this.$nextTick(() => {
+      Number(this.orderInfo.order_state) === 10 && this.loopCheckOrderStatus()
+    })
   },
 
   computed: {
@@ -195,6 +184,17 @@ export default {
   },
 
   methods: {
+    async jumpAndGetAuthCode() {
+      const { origin, pathname } = window.location
+      const localQuery = JSON.parse(JSON.stringify(this.query))
+      delete localQuery.auth_code
+      delete localQuery.chInfo
+      const transformUrl = origin + pathname + stringify(localQuery)
+      const redirect = window.encodeURIComponent(transformUrl)
+      await this.getNewAppId()
+      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
+    },
+
     visibilitychange() {
       document.addEventListener('visibilitychange', () => {
         // 用户打开或回到页面
@@ -205,6 +205,7 @@ export default {
         }
       })
     },
+
     async getDetail() {
       const res = await api.getDetail({ ...this.query, client: 'h5' })
 
@@ -269,7 +270,6 @@ export default {
     },
 
     async getScheme() {
-      // const query = ''
       const res = await api.getScheme({
         path: 'pages/order/order',
         query: '',
@@ -305,7 +305,6 @@ export default {
     */
 
     async loopCheckOrderStatus() {
-    //  &pay_sn=480675427162297486&key=495bb83d10aa8211ae7043c91e7fea57
       const { key, order_id } = this.query
       const { pay_sn } = this.orderInfo
       const res = await api.checkOrderStatus({ pay_sn, key, order_id })
