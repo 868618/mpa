@@ -553,7 +553,7 @@ export default {
             }
 
             .amount {
-              margin-top: 10px;
+              // margin-top: 10px;
               display: flex;
               align-items: flex-end;
               justify-content: space-between;
