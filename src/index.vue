@@ -78,7 +78,7 @@
         <p>返回<span v-if="!isAlipay">微信</span>小程序</p>
       </div>
 
-      <div class="right ali" @click="toAliPay" v-if="!isPayed && orderInfo.order_state !== '0'">
+      <div class="right ali" @click="toAliPay" v-if="!isPayed && orderInfo.order_state !== '0' && !isInWeChat">
         <p>支付宝支付</p>
       </div>
     </div>
@@ -104,7 +104,9 @@
 import qs from 'qs'
 import { location, shop } from '@/utils/imagesMap'
 import api from '@/api'
-import { isAliPayApp, stringify, secondToTime } from '@/utils/tool'
+import {
+  isAliPayApp, stringify, secondToTime, isWeChat,
+} from '@/utils/tool'
 import PubMask from '@/component/pub_mask'
 
 export default {
@@ -129,6 +131,7 @@ export default {
       app_id: null,
       tradeNO: null,
       isNeedJump: true,
+      isInWeChat: isWeChat(),
     }
   },
 
