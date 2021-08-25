@@ -30,7 +30,7 @@
 
         <ul class="list">
           <li class="item" v-for="(item, index) in orderInfo.goods_list" :key="index" :class="[{ giftt: index == lineNum }, 'item']">
-            <div class="good_img" :class="{ gift: Number(item.is_gift) }">
+            <div class="good_img" :class="{ giftt: Number(item.is_gift) }">
               <img :src="item.image_url" />
             </div>
             <div class="good_detail">
