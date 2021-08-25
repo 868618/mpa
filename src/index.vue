@@ -337,11 +337,10 @@ export default {
 
 <style lang="less" scoped>
 .alipay {
-  height: 100px;
+  // height: 100px;
   min-height: 100vh;
   background: #eff1f2;
-  padding-bottom: 280px;
-
+  padding-bottom: 180px;
   .count_down {
     opacity: 1;
     font-size: 28px;
@@ -631,6 +630,7 @@ export default {
     position: fixed;
     left: 0;
     right: 0;
+    z-index: 88;
     bottom: 0;
     background: #fff;
     box-shadow: 0px -7px 8px 0px rgba(239, 239, 239, 0.5);
