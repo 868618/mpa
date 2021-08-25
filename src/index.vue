@@ -163,7 +163,7 @@ export default {
         return
       }
 
-      window.ap.showLoading()
+      // window.ap.showLoading()
       // eslint-disable-next-line camelcase
       const { auth_code, key: token } = this.query
       const result = await api.getAliPayUserId({ auth_code, token })
@@ -174,7 +174,7 @@ export default {
       const params = { key, pay_sn, payment_code: 'mini_alipay' }
       const rrr = await api.getAliPaySsn(qs.stringify(params))
       console.log('rrr___________', rrr)
-      window.ap.hideLoading()
+      // window.ap.hideLoading()
       if (rrr.state === 200) {
         this.tradeNO = rrr.info.tradeNo
         this.$nextTick(() => {
