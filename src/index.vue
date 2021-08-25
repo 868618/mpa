@@ -340,7 +340,7 @@ export default {
   height: 100px;
   min-height: 100vh;
   background: #eff1f2;
-  padding-bottom: 180px;
+  padding-bottom: 280px;
 
   .count_down {
     opacity: 1;

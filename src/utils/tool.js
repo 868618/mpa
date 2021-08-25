@@ -1,5 +1,7 @@
 const ua = window.navigator.userAgent.toLowerCase()
 
+console.log('ua.match(/MicroMessenger/i)', ua.match(/MicroMessenger/i))
+
 const isAliPayApp = () => ua.includes('alipayclient')
 const isWeChat = () => ua.match(/MicroMessenger/i) === 'micromessenger'
 
