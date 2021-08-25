@@ -134,11 +134,12 @@ export default {
       app_id: null,
       tradeNO: null,
       isNeedJump: true,
-      isInWeChat: isWeChat(),
+      isInWeChat: false,
     }
   },
 
   async created() {
+    this.isInWeChat = isWeChat()
     console.log('000', this.isInWeChat)
     this.visibilitychange()
     this.query = this.getQuery()
