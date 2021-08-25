@@ -133,7 +133,6 @@ export default {
   },
 
   async created() {
-    console.log('999')
     this.visibilitychange()
     // this.getNewAppId()
     this.query = this.getQuery()
