@@ -39,7 +39,7 @@
               </div>
               <div class="amount">
                 <p class="price" :style="{ opacity: Number(item.is_gift) ? 0 : 1 }"><span>￥</span>{{ item.goods_price }}</p>
-                <p class="num">X{{ item.goods_num }}</p>
+                <p class="num"><span>X</span>{{ item.goods_num }}</p>
               </div>
             </div>
           </li>
@@ -573,6 +573,9 @@ export default {
                 font-weight: 400;
                 color: #999;
                 line-height: 1;
+                >span {
+                  font-size: 20px !important;
+                }
               }
             }
           }
