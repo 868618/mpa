@@ -538,6 +538,7 @@ export default {
             flex: 1;
             height: 100%;
             margin-left: 20px;
+            padding-top: 15px;
 
             .name {
               font-size: 26px;
@@ -552,14 +553,14 @@ export default {
             }
 
             .amount {
-              margin-top: 18px;
+              margin-top: 10px;
               display: flex;
               align-items: flex-end;
               justify-content: space-between;
 
               .price {
                 font-size: 30px;
-                font-weight: 700;
+                // font-weight: 700;
                 line-height: 1;
                 display: inline-flex;
                 align-items: flex-end;
