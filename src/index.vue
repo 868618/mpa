@@ -575,6 +575,7 @@ export default {
                 line-height: 1;
                 >span {
                   font-size: 20px !important;
+                  margin-right: 3px;
                 }
               }
             }
