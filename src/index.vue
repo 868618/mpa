@@ -531,6 +531,7 @@ export default {
             padding-top: 15px;
 
             .name {
+
               font-size: 26px;
               font-weight: 400;
               line-height: 38px;
