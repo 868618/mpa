@@ -6,10 +6,11 @@
     "dev": "cross-env CONSOLE=true vue-cli-service serve --mode development",
     "dev:pro": "cross-env CONSOLE=true vue-cli-service serve --mode production",
     "build:pro": "cross-env CONSOLE=true vue-cli-service build --mode production",
-    "build": "vue-cli-service build --mode production",
+    "build:dev": "vue-cli-service build --mode development",
     "analyzer": "cross-env ANALYZER=true vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "upload": "npm run build && git add . && git commit -am ’提交一下‘ && git push"
+    "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
+    "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push"
   },
   "dependencies": {
     "axios": "^0.21.1",
