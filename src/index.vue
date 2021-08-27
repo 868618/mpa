@@ -284,7 +284,7 @@ export default {
     async getScheme() {
       // const query = ''
       const res = await api.getScheme({
-        path: 'pages/order/order',
+        path: 'pages/user/user',
         query: '',
         is_expire: true,
         expire_type: 1,
