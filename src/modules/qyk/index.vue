@@ -96,7 +96,7 @@
             <div @click="handleTapBtn" :class="['btn', { disable: !card_info.button_status }]">{{ card_info.button_text }}</div>
         </div>
         <div class="toWeChat" @click="toWeChat">
-          <div>返回{{ !isInAliPay && '微信' }}小程序</div>
+          <div>返回{{ !isInAliPay ? '微信' : '' }}小程序</div>
         </div>
     </div>
   </footer>
@@ -247,20 +247,25 @@ export default {
     async initPay() {
       window.ap.showLoading()
       const { auth_code, key: token, key } = this.query
-      /*
-        告诉后端一声，后端去初始化订单（猜的）
-      */
-      const result = await api.getAliPayUserId({ auth_code, token })
-      if (result.code !== 200) return
+      try {
+        /*
+          告诉后端一声，后端去初始化订单（猜的）
+        */
+        const result = await api.getAliPayUserId({ auth_code, token })
+        if (result.code !== 200) return
 
-      const { code, data: { pdr_sn: pay_sn } } = await qyk.recharge({ ...this.currentCardInfo, key })
-      if (code !== 200) return
-      const params = { key, pay_sn, payment_code: 'mini_alipay' }
-      const { state, info } = await api.getAliPaySsn(qs.stringify(params))
-      window.ap.hideLoading()
-      if (state !== 200) return
-      this.tradeNO = info.tradeNo
-      this.$nextTick(this.pay)
+        const { code, data: { pdr_sn: pay_sn } } = await qyk.recharge({ ...this.currentCardInfo, key })
+        if (code !== 200) return
+        const params = { key, pay_sn, payment_code: 'mini_alipay' }
+        const { state, info } = await api.getAliPaySsn(qs.stringify(params))
+        if (state !== 200) return
+        this.tradeNO = info.tradeNo
+        this.$nextTick(this.pay)
+      } catch (error) {
+        console.log('error', error)
+      } finally {
+        window.ap.hideLoading()
+      }
     },
 
     pay() {
