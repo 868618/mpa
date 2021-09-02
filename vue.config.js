@@ -2,15 +2,23 @@ const pxtorem = require('postcss-pxtorem')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const path = require('path')
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-// const { IgnorePlugin } = require('webpack')
-
 const { ANALYZER, CONSOLE } = process.env
 
 const VConsolePlugin = require('vconsole-webpack-plugin')
 
 module.exports = {
-
+  pages: {
+    index: {
+      entry: 'src/modules/alipay/main.js',
+      template: 'public/index.html',
+      title: '订单详情',
+    },
+    qyk: {
+      entry: 'src/modules/qyk/main.js',
+      template: 'public/index.html',
+      title: '权益卡',
+    },
+  },
   css: {
     loaderOptions: {
       postcss: {

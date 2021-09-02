@@ -65,11 +65,6 @@
         </li>
       </ul>
 
-      <!-- <div class="amonut">
-        <p class="tip">待支付：</p>
-        <div class="price"><span>￥</span>{{ orderInfo.real_pay_amount }}</div>
-      </div> -->
-
       <div class="tip">注：如有特殊发货需求请联系顾问</div>
     </div>
 
@@ -89,14 +84,14 @@
     <PubMask v-if="isShowMask">
       <div class="mask">
         <div class="first">
-          <img src="./assets/images/first_step.png" >
+          <img :src="require('@/assets/images/first_step.png')" >
         </div>
         <div class="second">
-          <img src="./assets/images/second_step.png" >
+          <img :src="require('@/assets/images/second_step.png')" >
         </div>
 
         <div class="iknow" @click="closeMask">
-          <img src="./assets/images/i_know.png" >
+          <img :src="require('@/assets/images/i_know.png')" >
         </div>
       </div>
     </PubMask>
@@ -115,9 +110,7 @@ import PubMask from '@/component/pub_mask'
 export default {
   name: 'AliPay',
 
-  components: {
-    PubMask,
-  },
+  components: { PubMask },
 
   data() {
     return {
@@ -210,6 +203,7 @@ export default {
       })
     },
     async getDetail() {
+      console.log('999')
       const res = await api.getDetail({ ...this.query, client: 'h5' })
 
       if (res.code === 200) {
@@ -412,7 +406,7 @@ export default {
       right: 30px;
       top: 50%;
       transform: translateY(-50%);
-      background: url("./assets/images/right_arrow.png") no-repeat center;
+      background: url("../../assets/images/right_arrow.png") no-repeat center;
       background-size: 100%;
     }
     .location_box {
@@ -519,7 +513,7 @@ export default {
               left: 0;
               right: 0;
               bottom: 0;
-              background: url("./assets/images/gift.png") no-repeat center;
+              background: url("../../assets/images/gift.png") no-repeat center;
               background-size: 100% 100%;
               z-index: 1;
             }

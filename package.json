@@ -7,7 +7,7 @@
     "dev:pro": "cross-env CONSOLE=true vue-cli-service serve --mode production",
     "build:pro": "vue-cli-service build --mode production",
     "build:dev": "cross-env CONSOLE=true vue-cli-service build --mode development",
-    "analyzer": "cross-env ANALYZER=true vue-cli-service build",
+    "analyzer": "cross-env ANALYZER=true vue-cli-service build --mode production",
     "lint": "vue-cli-service lint",
     "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
     "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push"
@@ -21,8 +21,10 @@
     "moment-duration-format": "^2.3.2",
     "postcss-pxtorem": "^5.1.1",
     "qs": "^6.10.1",
+    "swiper": "^5.4.5",
     "vconsole-webpack-plugin": "^1.7.1",
     "vue": "^2.6.11",
+    "vue-awesome-swiper": "^4.1.1",
     "webpack-bundle-analyzer": "^4.4.2"
   },
   "devDependencies": {
