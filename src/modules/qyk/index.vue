@@ -95,8 +95,26 @@
             </div>
             <div @click="handleTapBtn" :class="['btn', { disable: !card_info.button_status }]">{{ card_info.button_text }}</div>
         </div>
+        <div class="toWeChat" @click="toWeChat">
+          <div>返回{{ !isInAliPay && '微信' }}小程序</div>
+        </div>
     </div>
   </footer>
+
+  <PubMask v-if="isShowMask">
+    <div class="mask">
+      <div class="first">
+        <img :src="require('@/assets/images/first_step.png')" >
+      </div>
+      <div class="second">
+        <img :src="require('@/assets/images/second_step.png')" >
+      </div>
+
+      <div class="iknow" @click="isShowMask = false">
+        <img :src="require('@/assets/images/i_know.png')" >
+      </div>
+    </div>
+  </PubMask>
 
 </div>
 </template>
@@ -104,11 +122,17 @@
 <script>
 import { directive } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
+import qs from 'qs'
 import qyk from '@/api/qyk'
-// import { isAliPayApp, stringify, secondToTime, isWeChat } from '@/utils/tool'
+import api from '@/api'
+import PubMask from '@/component/pub_mask'
+import { isAliPayApp, isWeChat, stringify } from '@/utils/tool'
 
 export default {
   name: 'Qyk',
+  components: {
+    PubMask,
+  },
   directives: {
     swiper: directive,
   },
@@ -169,29 +193,132 @@ export default {
         [3, { tip: '充值/特价充值/升级  仅需', name: '权益金', desc: '再赠' }],
       ]),
       isShowSwiper: false,
+      openlink: null,
+      isInWeChat: isWeChat(),
+      isInAliPay: isAliPayApp(),
+      app_id: null,
+      isShowMask: false,
+      currentCardInfo: null,
+      tradeNO: null,
     }
   },
 
-  created() {
-    this.query = this.getQuery()
+  async created() {
+    this.getQuery()
+    if (this.isInAliPay) {
+      const { href } = window.location
+      if (!href.includes('auth_code')) {
+        this.jumpAndGetAuthCode()
+        return
+      }
+      this.handleTapCard(this.query)
+      this.initPay()
+      return
+    }
+    console.log(this.query)
     this.handleTapCard(this.query)
+    this.getWeChatScheme()
   },
 
   methods: {
 
-    handleTapCard(e) {
-      // console.log(e)
-      const { token } = this.query
-      const { id, card_id } = e
-      this.getDetail({ id, card_id, token })
+    async handleTapCard({ id, card_id }) {
+      const { key: token, sale_id } = this.query
+      // const { id, card_id } = e
+      await this.getDetail({ id, card_id, token })
+      this.$nextTick(() => {
+        const { button_type: pdr_card_buy_type } = this.card_info
+        this.currentCardInfo = { ...this.query, pdr_sales_user_id: sale_id, pdr_card_buy_type }
+      })
     },
 
     handleTapBtn() {
-      console.log('handleTapBtn')
+      if (this.isInWeChat) {
+        this.toWeChat()
+        return
+      }
+      if (this.isInAliPay) {
+        this.pay()
+        return
+      }
+      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
+    },
+
+    async initPay() {
+      window.ap.showLoading()
+      const { auth_code, key: token, key } = this.query
+      /*
+        告诉后端一声，后端去初始化订单（猜的）
+      */
+      const result = await api.getAliPayUserId({ auth_code, token })
+      if (result.code !== 200) return
+
+      const { code, data: { pdr_sn: pay_sn } } = await qyk.recharge({ ...this.currentCardInfo, key })
+      if (code !== 200) return
+      const params = { key, pay_sn, payment_code: 'mini_alipay' }
+      const { state, info } = await api.getAliPaySsn(qs.stringify(params))
+      window.ap.hideLoading()
+      if (state !== 200) return
+      this.tradeNO = info.tradeNo
+      this.$nextTick(this.pay)
+    },
+
+    pay() {
+      const _this = this
+      const { tradeNO } = this
+      window.ap.tradePay({ tradeNO }, ({ resultCode }) => {
+        if (resultCode !== '9000') return
+        _this.getDetail()
+      })
+    },
+
+    async jumpAndGetAuthCode() {
+      const { origin, pathname } = window.location
+      const localQuery = JSON.parse(JSON.stringify(this.query))
+      delete localQuery.auth_code
+      delete localQuery.chInfo
+      const transformUrl = origin + pathname + stringify(localQuery)
+      const redirect = window.encodeURIComponent(transformUrl)
+
+      await this.getNewAppId()
+      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
+    },
+
+    async getNewAppId() {
+      const res = await api.getNewAppId()
+      if (res.code === 200) {
+        this.app_id = res.data.app_id
+      }
+    },
+
+    async getWeChatScheme() {
+      // const query = JSON.parse(JSON.stringify(this.query))
+      // delete query.token
+
+      const res = await api.getScheme({
+        path: 'pages/user/user',
+        // query: Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&'),
+        query: '',
+        is_expire: true,
+        expire_type: 1,
+        expire_interval: 1,
+        expire_time: 1630132832,
+      })
+      if (res.code === 200) {
+        this.openlink = res.data.openlink
+      }
+    },
+
+    toWeChat() {
+      if (this.isInAliPay) {
+        this.isShowMask = true
+        return
+      }
+      window.location.href = this.openlink
     },
 
     async getDetail(data = {}) {
-      const { token } = this.query
+      const { key: token } = this.query
       const res = await qyk.getDCardDetail({ ...data, token })
       this.isShowSwiper = false
       if (res.code === 200) {
@@ -206,7 +333,7 @@ export default {
 
     getQuery() {
       const entries = window.location.search.replace(/^\?/ig, '').split('&').map(i => i.split('='))
-      return Object.fromEntries(entries)
+      this.query = Object.fromEntries(entries)
     },
   },
   computed: {
@@ -217,30 +344,6 @@ export default {
       return `background-image: url("${this.card_info.card_image}");`
     },
   },
-  // watch: {
-  //   card_info: {
-  //     handler({ card_list }) {
-  //       this.$nextTick(() => {
-  //         console.log('val', card_list)
-  //         console.log('this.scroll_item', Array.isArray(this.$refs.scroll_item))
-  //         console.log('document.body.clientWidth', document.body.clientWidth)
-  //         const width = document.body.clientWidth
-  //         const slides = this.$refs.scroll_item
-  //         const clickedIndex = card_list.findIndex(i => i.tag_sign)
-  //         // document.getElementsByClassName('scroll_box')[0].scrollLeft = 200
-  //         // const { clickedIndex, slides, width } = this
-  //         const { clientWidth } = slides[clickedIndex]
-  //         console.log('clientWidth', clientWidth)
-  //         const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
-  //         // console.log('distance', distance)
-
-  //         // const { scrollLeft } = document.getElementsByClassName('scroll_box')[0]
-  //         document.getElementsByClassName('scroll_box')[0].scrollLeft = distance + 0.5 * (width - clientWidth)
-  //       })
-  //     },
-  //     deep: true,
-  //   },
-  // },
 }
 </script>
 
@@ -393,8 +496,8 @@ export default {
         overflow: hidden;
         background-position:top left;
         background-size: 100%;
+        border-radius: 12px;
         .price {
-          color: blue;
           margin-top: 42px;
           text-align: right;
           padding-right: 34px;
@@ -449,7 +552,7 @@ export default {
     .footer {
       background: #F5F5F5;
       padding-top: 20px;
-      padding-bottom: 300px;
+      padding-bottom: 400px;
 
       .footer_box {
         width: 682px;
@@ -652,8 +755,60 @@ export default {
                     background: #D8D8D8;
                 }
             }
+
+            .toWeChat {
+              height: 120px;
+              background: #fff;
+              box-shadow: 0px -7px 8px 0px rgba(239, 239, 239, 0.5);
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              font-size: 30px;
+              font-weight: 400;
+              color: #ffffff;
+              padding: 0 27px;
+              > div {
+                width: 338px;
+                height: 88px;
+                opacity: 1;
+                background: #08c161;
+                border-radius: 10px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+              }
+            }
         }
     }
+
+    .mask {
+    text-align: right;
+    padding-right: 63px;
+    .first {
+      >img {
+        width: 312px;
+        height: 220px;
+      }
+    }
+    .second {
+      // text-align: right;
+      margin-top: 360px;
+      >img {
+        width: 408px;
+        height: 271px;
+      }
+    }
+
+    .iknow {
+      text-align: center;
+      margin-top: 70px;
+      >img {
+        width: 218px;
+        height: 66px;
+      }
+    }
+  }
 
   }
 </style>

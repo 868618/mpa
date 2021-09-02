@@ -8,6 +8,17 @@ class Qyk extends Http {
       headers,
     })
   }
+
+  /*
+        获取 pdr_sn
+    */
+  recharge(data) {
+    return this.request({
+      url: '/index.php?app=cash&mod=recharge',
+      data,
+      method: 'POST',
+    })
+  }
 }
 
 export default new Qyk()

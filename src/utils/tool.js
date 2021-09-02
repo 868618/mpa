@@ -3,8 +3,6 @@ const ua = window.navigator.userAgent.toLowerCase()
 const isAliPayApp = () => ua.includes('alipayclient')
 const isWeChat = () => ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i)[0] === 'micromessenger'
 
-console.log('isWeChat', isWeChat())
-
 // eslint-disable-next-line no-param-reassign
 const stringify = obj => Object.entries(obj).reduce((pre, cur) => pre += `&${cur.join('=')}`, '').replace(/^./ig, '?')
 
