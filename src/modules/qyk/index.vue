@@ -253,8 +253,8 @@ export default {
         */
         const result = await api.getAliPayUserId({ auth_code, token })
         if (result.code !== 200) return
-        console.log(9999999, { ...this.currentCardInfo, key })
         const { id: pdr_id, card_id: pdr_card_id } = this.currentCardInfo
+        console.log('666666', { ...this.currentCardInfo, key, type: 2, pdr_id, pdr_card_id })
         const { code, data: { pdr_sn: pay_sn } } = await qyk.recharge({ ...this.currentCardInfo, key, type: 2, pdr_id, pdr_card_id })
         if (code !== 200) return
         const params = { key, pay_sn, payment_code: 'mini_alipay' }
