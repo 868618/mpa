@@ -7,6 +7,16 @@ const { ANALYZER, CONSOLE } = process.env
 const VConsolePlugin = require('vconsole-webpack-plugin')
 
 module.exports = {
+  // configureWebpack: {
+  //   plugins: [
+  //     ['import', {
+  //       libraryName: 'vant',
+  //       libraryDirectory: 'es',
+  //       style: true,
+  //     }, 'vant'],
+  //   ],
+  // },
+
   pages: {
     index: {
       entry: 'src/modules/alipay/main.js',
@@ -26,6 +36,7 @@ module.exports = {
           pxtorem({
             rootValue: 75, // 换算的基数(设计图750的根字体为75)
             propList: ['*'],
+            exclude: /node_modules/i, // 禁止转换安装包下的任何组件
           }),
         ],
       },

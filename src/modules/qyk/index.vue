@@ -51,7 +51,7 @@
 
   <footer class="footer">
     <div class="footer_box">
-      <div class="top">
+      <div class="top" @click="$toast('请返回小程序查看')">
         <img src="https://pre-1303873333.picbj.myqcloud.com/data/pre/images/open_meet.png" alt="">
       </div>
       <div class="top_title">
@@ -63,6 +63,7 @@
             class="topup_detail_box_item"
             v-for="(item, index) in card_info.gift_list"
             :key="index"
+            @click="handleTapIcon(item)"
         >
             <div class="icon">
                 <img :src="item.gift_image" />
@@ -101,7 +102,7 @@
     </div>
   </footer>
 
-  <PubMask v-if="isShowMask">
+  <PubMask v-if="maskMenu.isShowToBrowser">
     <div class="mask">
       <div class="first">
         <img :src="require('@/assets/images/first_step.png')" >
@@ -110,10 +111,30 @@
         <img :src="require('@/assets/images/second_step.png')" >
       </div>
 
-      <div class="iknow" @click="isShowMask = false">
+      <div class="iknow" @click="maskMenu.isShowToBrowser = false">
         <img :src="require('@/assets/images/i_know.png')" >
       </div>
     </div>
+  </PubMask>
+
+  <PubMask v-if="maskMenu.isShowDetail">
+      <div class="mask_box">
+          <div class="mask_header">
+              <div class="icon"  >
+                  <img :src='maskInfo.gift_image' />
+              </div>
+              <span>{{ maskInfo.gift_name }}</span>
+          </div>
+
+          <div class="mask_desc">
+              <div>
+                  {{ maskInfo.gift_intro }}
+              </div>
+          </div>
+
+          <div class="close_btn" @click="maskMenu.isShowDetail = false">关闭</div>
+
+      </div>
   </PubMask>
 
 </div>
@@ -123,10 +144,14 @@
 import { directive } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import qs from 'qs'
+import Vue from 'vue';
+import { Toast } from 'vant';
 import qyk from '@/api/qyk'
 import api from '@/api'
 import PubMask from '@/component/pub_mask'
 import { isAliPayApp, isWeChat, stringify } from '@/utils/tool'
+
+Vue.use(Toast)
 
 export default {
   name: 'Qyk',
@@ -197,9 +222,14 @@ export default {
       isInWeChat: isWeChat(),
       isInAliPay: isAliPayApp(),
       app_id: null,
-      isShowMask: false,
+      // isShowMask: false,
       currentCardInfo: null,
       tradeNO: null,
+      maskInfo: {},
+      maskMenu: {
+        isShowToBrowser: false,
+        isShowDetail: false,
+      },
     }
   },
 
@@ -228,6 +258,17 @@ export default {
         const { button_type: pdr_card_buy_type } = this.card_info
         this.currentCardInfo = { ...this.query, pdr_sales_user_id: sale_id, pdr_card_buy_type }
       })
+    },
+
+    handleTapIcon(e) {
+      console.log(e)
+      const { gift_url } = e
+      if (gift_url) {
+        this.$toast('请返回小程序查看')
+        return
+      }
+      this.maskInfo = e
+      this.maskMenu.isShowDetail = true
     },
 
     handleTapBtn() {
@@ -315,7 +356,7 @@ export default {
 
     toWeChat() {
       if (this.isInAliPay) {
-        this.isShowMask = true
+        this.maskMenu.isShowToBrowser = true
         return
       }
       window.location.href = this.openlink
@@ -527,10 +568,10 @@ export default {
         text-align: left;
         color: #999999;
         span {
-            font-size: 32rpx;
+            font-size: 32px;
             font-weight: 500;
             color: #f1270d;
-            padding: 0 20rpx;
+            padding: 0 20px;
         }
 
         .tip_top {
@@ -787,32 +828,97 @@ export default {
     }
 
     .mask {
-    text-align: right;
-    padding-right: 63px;
-    .first {
-      >img {
-        width: 312px;
-        height: 220px;
+      text-align: right;
+      padding-right: 63px;
+      .first {
+        >img {
+          width: 312px;
+          height: 220px;
+        }
       }
-    }
-    .second {
-      // text-align: right;
-      margin-top: 360px;
-      >img {
-        width: 408px;
-        height: 271px;
+      .second {
+        // text-align: right;
+        margin-top: 360px;
+        >img {
+          width: 408px;
+          height: 271px;
+        }
+      }
+
+      .iknow {
+        text-align: center;
+        margin-top: 70px;
+        >img {
+          width: 218px;
+          height: 66px;
+        }
       }
     }
 
-    .iknow {
-      text-align: center;
-      margin-top: 70px;
-      >img {
-        width: 218px;
-        height: 66px;
-      }
+    .mask_box{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 580px;
+        background: #fff;
+        border-radius: 16px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        box-sizing: border-box;
+
+        .mask_header{
+            text-align: center;
+            .icon{
+                width: 78px;
+                height: 78px;
+                margin: 0 auto;
+                margin-bottom: 18px;
+                >img {
+                  width: 78px;
+                  height: 78px;
+                }
+            }
+            >span {
+                font-size: 32px;
+                font-weight: bold;
+                color: #030303;
+                letter-spacing: 1px;
+            }
+        }
+
+        .mask_desc{
+            box-sizing: border-box;
+            border-radius: 8px;
+            padding: 24px 12px;
+            background: #f5f5f5;
+            margin: 23px 20px 20px;
+            font-size: 22px;
+            font-weight: 400;
+            color: #666666;
+            line-height: 38px;
+            >div {
+                width: 100%;
+                height: 220px;
+                overflow-y: scroll;
+            }
+        }
+
+        .close_btn {
+            width: 180px;
+            height: 72px;
+            opacity: 1;
+            background: linear-gradient(270deg,#fc1b1d 0%, #ff9fa1 100%);
+            border-radius: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: 400;
+            color: #fff;
+            margin: 0 auto;
+        }
     }
-  }
 
   }
 </style>
