@@ -124,10 +124,6 @@
       </div>
   </PubMask>
 
-  <!-- <van-overlay :show="true" z-index="99">
-    <van-loading type="spinner" />
-  </van-overlay> -->
-
 </div>
 </template>
 
@@ -143,14 +139,11 @@ import PubMask from '@/component/pub_mask'
 import { isAliPayApp, isWeChat, stringify } from '@/utils/tool'
 
 Vue.use(Toast)
-// Vue.use(Loading)
-// Vue.use(Overlay)
 
 export default {
   name: 'Qyk',
   components: {
     PubMask,
-    // Loading,
   },
   directives: {
     swiper: directive,
@@ -198,7 +191,7 @@ export default {
       query: {},
       member_info: null,
       card_info: null,
-      isX: false,
+      // isX: false,
       textMap: new Map([
         [0, { tip: '开通权益卡', desc: '立赠' }],
         [1, { tip: '开通权益卡', desc: '立赠' }],
@@ -224,6 +217,7 @@ export default {
         isShowToBrowser: false,
         isShowDetail: false,
       },
+      storage: new Map(),
     }
   },
 
@@ -383,14 +377,19 @@ export default {
     },
 
     async getWeChatScheme() {
+      const { id, card_id } = this.currentCardInfo
+      const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => !['key', 'token'].includes(k)).map(([k, v]) => `${k}=${v}`).join('&')
+
+      if (this.storage.has(JSON.stringify(query))) {
+        this.openlink = this.storage.get(JSON.stringify(query))
+        return
+      }
+
       const loading = Toast.loading({
-        // message: '加载中...',
         loadingType: 'spinner',
         forbidClick: true,
+        duration: 0,
       })
-      const { id, card_id } = this.currentCardInfo
-      const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => k !== 'token').map(([k, v]) => `${k}=${v}`).join('&')
-
       const res = await api.getScheme({
         // path: 'pages/user/user',
         path: 'mermall/pages/topup/index',
@@ -401,9 +400,11 @@ export default {
         expire_interval: 1,
         expire_time: 1630132832,
       })
+      // console.log(loading)
       loading.clear()
       if (res.code === 200) {
         this.openlink = res.data.openlink
+        this.storage.set(JSON.stringify(query), res.data.openlink)
       }
     },
 
