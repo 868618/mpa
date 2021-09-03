@@ -15,22 +15,11 @@
   <nav class="nav" v-if="isShowSwiper">
     <section v-swiper:mySwiper="swiperOptions">
       <section class="swiper-wrapper">
-        <section class="swiper-slide slide" :class="{ active: item.tag_sign }" v-for="(item, index) in card_info.card_list" :key="index">
+        <section class="swiper-slide slide" :class="{ active: clickedIndex == index }" v-for="(item, index) in card_info.card_list" :key="index">
           <div class="card">{{ item.card_name }}</div>
         </section>
       </section>
     </section>
-    <!-- <div class="scroll_box">
-      <div
-        :class="['scroll_item', { active: item.tag_sign }]"
-        v-for="(item, index) in card_info.card_list"
-        :key="index"
-        ref="scroll_item"
-        @click="handleTapCard(item)"
-      >
-        {{ item.card_name }}
-      </div>
-    </div> -->
   </nav>
 
   <section class="card_detail">
@@ -42,8 +31,6 @@
     </div>
 
     <div class="tip_section">
-      <!-- <p class="tip_top">{{ tipMap.get(card_info.button_type).tip }}</p>
-      <p class="tip_bottom">爱上我的女老板</p> -->
       <div class="tip_top">{{ tipMap.get(card_info.button_type).tip }} <span>{{ card_info.middle_show_amount[0] }}</span> {{ tipMap.get(card_info.button_type).name }}</div>
       <div class="tip_bottom">{{ tipMap.get(card_info.button_type).desc }} <span>{{ card_info.middle_show_amount[1] }}</span></div>
     </div>
@@ -82,7 +69,7 @@
     </div>
 
     <div class="sticky_bottom">
-        <div class="agreement active">
+        <div class="agreement active" @click="handleTapAgree">
             点击{{card_info.button_text}}即代表您同意 <text>《碧生源储值卡用户须知》</text>
         </div>
         <div class="recharge">
@@ -137,6 +124,10 @@
       </div>
   </PubMask>
 
+  <!-- <Dialog title="标题">
+    <p slot="title">爱上我的女老板</p>
+  </Dialog> -->
+
 </div>
 </template>
 
@@ -145,7 +136,7 @@ import { directive } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import qs from 'qs'
 import Vue from 'vue';
-import { Toast } from 'vant';
+import { Toast, Dialog } from 'vant';
 import qyk from '@/api/qyk'
 import api from '@/api'
 import PubMask from '@/component/pub_mask'
@@ -157,6 +148,7 @@ export default {
   name: 'Qyk',
   components: {
     PubMask,
+    // Dialog,
   },
   directives: {
     swiper: directive,
@@ -164,7 +156,6 @@ export default {
   data() {
     const _this = this
     return {
-      tmp: 'https://www.baidu.com/img/flexible/logo/pc/result@2.png',
       clickedIndex: 0,
       /*
         swiper配置
@@ -185,12 +176,14 @@ export default {
             if (clickedIndex === _this.clickedIndex) return
             _this.clickedIndex = clickedIndex
             _this.handleTapCard(_this.card_info.card_list[clickedIndex])
-            _this.$nextTick(() => {
-              this.update()
-            })
+            const { slides, width } = this
+            const { clientWidth } = slides[clickedIndex]
+            const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
+            this.translateTo(((width - clientWidth) * 0.5) - distance, 200, true, true)
           },
           init() {
             const clickedIndex = _this.card_info.card_list.findIndex(i => i.tag_sign)
+            _this.clickedIndex = clickedIndex
             const { slides, width } = this
             const { clientWidth } = slides[clickedIndex]
             const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
@@ -198,10 +191,7 @@ export default {
           },
         },
       },
-      // token: '1426a899435cd3ad9a9be2877ca6998a',
       query: {},
-
-      cards: ['白金卡', '黄金卡', '黑金卡', '黄金卡', '钻石卡', '贵宾卡'],
       member_info: null,
       card_info: null,
       isX: false,
@@ -234,41 +224,75 @@ export default {
   },
 
   async created() {
-    document.addEventListener('visibilitychange', () => {
-      // 用户打开或回到页面
-      if (document.visibilityState === 'visible') {
-        // 页面可见
-        this.handleTapCard(this.query)
-      }
-    })
+    /*
+      页面从后台隐藏到展示时候执行的逻辑
+      初次进入不执行此逻辑
+    */
+    this.onShow()
+
+    /*
+      获取url参数
+    */
     this.getQuery()
+
+    /*
+      进入支付宝时候的逻辑
+    */
     if (this.isInAliPay) {
+      /*
+        没有拿到auth_code时候的逻辑
+      */
       const { href } = window.location
       if (!href.includes('auth_code')) {
         this.jumpAndGetAuthCode()
         return
       }
+      /*
+        有auth_code的时候 直接去拿页面详情 同时也去唤起支付
+      */
       this.handleTapCard(this.query)
       this.initPay()
       return
     }
+    /*
+      非支付宝环境的时候直接获取页面详情和唤起的微信小程序的短链
+    */
     this.handleTapCard(this.query)
     this.getWeChatScheme()
   },
 
   methods: {
 
+    async handleTapAgree() {
+      const doc_code = 'card_agreement'
+      const { code, data: { doc_title: title, doc_content: message } } = await qyk.getAgree({ doc_code })
+      if (code === 200) Dialog({ message, title, messageAlign: 'left' })
+    },
+
+    onShow() {
+      document.addEventListener('visibilitychange', () => {
+      // 用户打开或回到页面
+        document.visibilityState === 'visible' && this.handleTapCard(this.query)
+      })
+    },
+    /*
+      获取页面详情
+    */
     async handleTapCard({ id, card_id }) {
       const { key: token, sale_id } = this.query
       await this.getDetail({ id, card_id, token })
+      /*
+        更新支付所需要的相关数据
+      */
       this.$nextTick(() => {
         const { button_type: pdr_card_buy_type } = this.card_info
         this.currentCardInfo = { ...this.query, pdr_sales_user_id: sale_id, pdr_card_buy_type }
       })
     },
-
+    /*
+      打开弹窗
+    */
     handleTapIcon(e) {
-      console.log(e)
       const { gift_url } = e
       if (gift_url) {
         this.$toast('请返回小程序查看')
@@ -279,14 +303,23 @@ export default {
     },
 
     handleTapBtn() {
+      /*
+        在腾讯的环境就去微信小程序
+      */
       if (this.isInWeChat) {
         this.toWeChat()
         return
       }
+      /*
+        在支付宝的环境就去唤起支付
+      */
       if (this.isInAliPay) {
         this.pay()
         return
       }
+      /*
+        不在支付宝环境和腾讯环境的时候 直接去唤起支付宝
+      */
       window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
     },
 
@@ -300,13 +333,12 @@ export default {
         const result = await api.getAliPayUserId({ auth_code, token })
         if (result.code !== 200) return
         const { id: pdr_id, card_id: pdr_card_id } = this.currentCardInfo
-        console.log('666666', { ...this.currentCardInfo, key, type: 2, pdr_id, pdr_card_id })
-        const res = await qyk.recharge(qs.stringify({ ...this.currentCardInfo, key, type: 2, pdr_id, pdr_card_id }))
-        console.log('res', res)
-        const { code, data: { pdr_sn: pay_sn } } = res
+        /*
+          获取pay_sn
+        */
+        const { code, data: { pdr_sn: pay_sn } } = await qyk.recharge(qs.stringify({ ...this.currentCardInfo, key, type: 2, pdr_id, pdr_card_id }))
         if (code !== 200) return
-        const params = { key, pay_sn, payment_code: 'mini_alipay' }
-        const { state, info } = await api.getAliPaySsn(qs.stringify(params))
+        const { state, info } = await api.getAliPaySsn(qs.stringify({ key, pay_sn, payment_code: 'mini_alipay' }))
         if (state !== 200) return
         this.tradeNO = info.tradeNo
         this.$nextTick(this.pay)
@@ -334,25 +366,26 @@ export default {
       const transformUrl = origin + pathname + stringify(localQuery)
       const redirect = window.encodeURIComponent(transformUrl)
 
-      await this.getNewAppId()
-      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${this.app_id}&scope=auth_base&redirect_uri=${redirect}`
+      const app_id = await this.getNewAppId()
+      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${app_id}&scope=auth_base&redirect_uri=${redirect}`
     },
 
     async getNewAppId() {
-      const res = await api.getNewAppId()
-      if (res.code === 200) {
-        this.app_id = res.data.app_id
-      }
+      const { code, data } = await api.getNewAppId()
+      return code === 200 ? data.app_id : Promise.reject(data)
     },
 
     async getWeChatScheme() {
       // const query = JSON.parse(JSON.stringify(this.query))
       // delete query.token
+      const query = Object.entries(this.query).filter(([k]) => k !== 'token').map(([k, v]) => `${k}=${v}`).join('&')
 
       const res = await api.getScheme({
-        path: 'pages/user/user',
+        // path: 'pages/user/user',
+        path: 'mermall/pages/topup/index',
         // query: Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&'),
-        query: '',
+        query,
+        // query: '',
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
@@ -374,14 +407,23 @@ export default {
     async getDetail(data = {}) {
       const { key: token } = this.query
       const res = await qyk.getDCardDetail({ ...data, token })
-      this.isShowSwiper = false
+      // this.isShowSwiper = false
       if (res.code === 200) {
         const { member_info, card_info } = res.data
         this.member_info = member_info
+
+        /*
+          对比一下两次列表的内容是否一致，不一致的话就重新初始化swiper
+        */
+        const newList = card_info.card_list.map(({ tag_sign, ...i }) => i)
+        const oldList = this.card_info?.card_list.map(({ tag_sign, ...i }) => i)
         this.card_info = card_info
-        this.$nextTick(() => {
-          this.isShowSwiper = true
-        })
+        if (JSON.stringify(newList) !== JSON.stringify(oldList)) {
+          this.isShowSwiper = false
+          this.$nextTick(() => {
+            this.isShowSwiper = true
+          })
+        }
       }
     },
 

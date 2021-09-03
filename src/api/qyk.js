@@ -19,6 +19,14 @@ class Qyk extends Http {
       method: 'POST',
     })
   }
+
+  getAgree(params) {
+    return this.request({
+      url: '/api/frontend/agreement/index',
+      params,
+      // method: 'POST',
+    })
+  }
 }
 
 export default new Qyk()
