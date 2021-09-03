@@ -362,8 +362,8 @@ export default {
 
     async jumpAndGetAuthCode() {
       const { origin, pathname } = window.location
-      const { id, card_id } = this.currentCardInfo
-      const localQuery = JSON.parse(JSON.stringify({ ...this.query, id, card_id }))
+      // const { id, card_id } = this.currentCardInfo
+      const localQuery = JSON.parse(JSON.stringify(this.query))
       delete localQuery.auth_code
       delete localQuery.chInfo
       const transformUrl = origin + pathname + stringify(localQuery)
