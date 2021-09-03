@@ -180,6 +180,8 @@ export default {
             const { clientWidth } = slides[clickedIndex]
             const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
             this.translateTo(((width - clientWidth) * 0.5) - distance, 200, true, true)
+
+            console.log('this.currentCardInfo', _this.currentCardInfo)
           },
           init() {
             const clickedIndex = _this.card_info.card_list.findIndex(i => i.tag_sign)
@@ -360,7 +362,8 @@ export default {
 
     async jumpAndGetAuthCode() {
       const { origin, pathname } = window.location
-      const localQuery = JSON.parse(JSON.stringify(this.query))
+      const { id, card_id } = this.currentCardInfo
+      const localQuery = JSON.parse(JSON.stringify({ ...this.query, id, card_id }))
       delete localQuery.auth_code
       delete localQuery.chInfo
       const transformUrl = origin + pathname + stringify(localQuery)
