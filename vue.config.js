@@ -7,15 +7,31 @@ const { ANALYZER, CONSOLE } = process.env
 const VConsolePlugin = require('vconsole-webpack-plugin')
 
 module.exports = {
-  // configureWebpack: {
-  //   plugins: [
-  //     ['import', {
-  //       libraryName: 'vant',
-  //       libraryDirectory: 'es',
-  //       style: true,
-  //     }, 'vant'],
-  //   ],
-  // },
+  configureWebpack: {
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          /*
+            最少引用两次的第三方库才抽离为公共文件
+          */
+          vendors: {
+            name: 'chunk-vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial',
+            minChunks: 2,
+          },
+          common: {
+            name: 'chunk-common',
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true,
+          },
+        },
+      },
+    },
+  },
 
   pages: {
     index: {
