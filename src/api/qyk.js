@@ -14,7 +14,7 @@ class Qyk extends Http {
     */
   recharge(data) {
     return this.request({
-      url: '/index.php?app=cash&mod=recharge',
+      url: '/cmobile/index.php?app=cash&mod=recharge',
       data,
       method: 'POST',
     })

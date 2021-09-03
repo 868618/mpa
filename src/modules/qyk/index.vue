@@ -215,7 +215,6 @@ export default {
       this.initPay()
       return
     }
-    console.log(this.query)
     this.handleTapCard(this.query)
     this.getWeChatScheme()
   },
@@ -224,7 +223,6 @@ export default {
 
     async handleTapCard({ id, card_id }) {
       const { key: token, sale_id } = this.query
-      // const { id, card_id } = e
       await this.getDetail({ id, card_id, token })
       this.$nextTick(() => {
         const { button_type: pdr_card_buy_type } = this.card_info
