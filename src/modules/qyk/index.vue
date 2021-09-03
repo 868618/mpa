@@ -383,7 +383,6 @@ export default {
       const res = await api.getScheme({
         // path: 'pages/user/user',
         path: 'mermall/pages/topup/index',
-        // query: Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&'),
         query,
         // query: '',
         is_expire: true,
