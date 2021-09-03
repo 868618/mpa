@@ -124,9 +124,9 @@
       </div>
   </PubMask>
 
-  <!-- <Dialog title="标题">
-    <p slot="title">爱上我的女老板</p>
-  </Dialog> -->
+  <!-- <van-overlay :show="true" z-index="99">
+    <van-loading type="spinner" />
+  </van-overlay> -->
 
 </div>
 </template>
@@ -143,12 +143,14 @@ import PubMask from '@/component/pub_mask'
 import { isAliPayApp, isWeChat, stringify } from '@/utils/tool'
 
 Vue.use(Toast)
+// Vue.use(Loading)
+// Vue.use(Overlay)
 
 export default {
   name: 'Qyk',
   components: {
     PubMask,
-    // Dialog,
+    // Loading,
   },
   directives: {
     swiper: directive,
@@ -260,7 +262,7 @@ export default {
       非支付宝环境的时候直接获取页面详情和唤起的微信小程序的短链
     */
     this.handleTapCard(this.query)
-    this.getWeChatScheme()
+    // this.getWeChatScheme()
   },
 
   methods: {
@@ -287,8 +289,8 @@ export default {
         更新支付所需要的相关数据
       */
       this.$nextTick(() => {
-        const { button_type: pdr_card_buy_type } = this.card_info
-        this.currentCardInfo = { ...this.query, pdr_sales_user_id: sale_id, pdr_card_buy_type }
+        const { button_type: pdr_card_buy_type, id: _id, card_id: _card_id } = this.card_info
+        this.currentCardInfo = { ...this.query, pdr_sales_user_id: sale_id, pdr_card_buy_type, id: _id, card_id: _card_id }
       })
     },
     /*
@@ -322,7 +324,10 @@ export default {
       /*
         不在支付宝环境和腾讯环境的时候 直接去唤起支付宝
       */
-      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
+      const { origin, pathname } = window.location
+      const { id, card_id } = this.currentCardInfo
+      const href = origin + pathname + stringify({ ...this.query, id, card_id })
+      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(href)}`
     },
 
     async initPay() {
@@ -362,10 +367,7 @@ export default {
 
     async jumpAndGetAuthCode() {
       const { origin, pathname } = window.location
-      const { id, card_id } = this.currentCardInfo || {}
-      console.log('id', id)
-      console.log('card_id', card_id)
-      const localQuery = JSON.parse(JSON.stringify({ ...this.query, ...(this.currentCardInfo ? { id, card_id } : null) }))
+      const localQuery = JSON.parse(JSON.stringify(this.query))
       delete localQuery.auth_code
       delete localQuery.chInfo
       const transformUrl = origin + pathname + stringify(localQuery)
@@ -381,9 +383,13 @@ export default {
     },
 
     async getWeChatScheme() {
-      // const query = JSON.parse(JSON.stringify(this.query))
-      // delete query.token
-      const query = Object.entries(this.query).filter(([k]) => k !== 'token').map(([k, v]) => `${k}=${v}`).join('&')
+      const loading = Toast.loading({
+        // message: '加载中...',
+        loadingType: 'spinner',
+        forbidClick: true,
+      })
+      const { id, card_id } = this.currentCardInfo
+      const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => k !== 'token').map(([k, v]) => `${k}=${v}`).join('&')
 
       const res = await api.getScheme({
         // path: 'pages/user/user',
@@ -395,16 +401,18 @@ export default {
         expire_interval: 1,
         expire_time: 1630132832,
       })
+      loading.clear()
       if (res.code === 200) {
         this.openlink = res.data.openlink
       }
     },
 
-    toWeChat() {
+    async toWeChat() {
       if (this.isInAliPay) {
         this.maskMenu.isShowToBrowser = true
         return
       }
+      await this.getWeChatScheme()
       window.location.href = this.openlink
     },
 
