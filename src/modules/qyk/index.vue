@@ -377,13 +377,14 @@ export default {
     },
 
     async getWeChatScheme() {
-      const { id, card_id } = this.currentCardInfo
-      const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => !['key', 'token'].includes(k)).map(([k, v]) => `${k}=${v}`).join('&')
+      // const { id, card_id } = this.currentCardInfo
+      // const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => !['key', 'token'].includes(k)).map(([k, v]) => `${k}=${v}`).join('&')
 
-      if (this.storage.has(JSON.stringify(query))) {
-        this.openlink = this.storage.get(JSON.stringify(query))
-        return
-      }
+      // if (this.storage.has(JSON.stringify(query))) {
+      //   this.openlink = this.storage.get(JSON.stringify(query))
+      //   return
+      // }
+      if (this.openlink) return
 
       const loading = Toast.loading({
         loadingType: 'spinner',
@@ -391,10 +392,10 @@ export default {
         duration: 0,
       })
       const res = await api.getScheme({
-        // path: 'pages/user/user',
-        path: 'mermall/pages/topup/index',
-        query,
-        // query: '',
+        path: 'pages/user/user',
+        // path: 'mermall/pages/topup/index',
+        // query,
+        query: '',
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
@@ -404,7 +405,7 @@ export default {
       loading.clear()
       if (res.code === 200) {
         this.openlink = res.data.openlink
-        this.storage.set(JSON.stringify(query), res.data.openlink)
+        // this.storage.set(JSON.stringify(query), res.data.openlink)
       }
     },
 
