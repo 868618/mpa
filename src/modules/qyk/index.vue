@@ -234,6 +234,13 @@ export default {
   },
 
   async created() {
+    document.addEventListener('visibilitychange', () => {
+      // 用户打开或回到页面
+      if (document.visibilityState === 'visible') {
+        // 页面可见
+        this.handleTapCard(this.query)
+      }
+    })
     this.getQuery()
     if (this.isInAliPay) {
       const { href } = window.location
