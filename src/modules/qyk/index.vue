@@ -175,8 +175,6 @@ export default {
             const { clientWidth } = slides[clickedIndex]
             const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
             this.translateTo(((width - clientWidth) * 0.5) - distance, 200, true, true)
-
-            console.log('this.currentCardInfo', _this.currentCardInfo)
           },
           init() {
             const clickedIndex = _this.card_info.card_list.findIndex(i => i.tag_sign)
@@ -217,7 +215,6 @@ export default {
         isShowToBrowser: false,
         isShowDetail: false,
       },
-      storage: new Map(),
     }
   },
 
@@ -377,13 +374,6 @@ export default {
     },
 
     async getWeChatScheme() {
-      // const { id, card_id } = this.currentCardInfo
-      // const query = Object.entries({ ...this.query, id, card_id }).filter(([k]) => !['key', 'token'].includes(k)).map(([k, v]) => `${k}=${v}`).join('&')
-
-      // if (this.storage.has(JSON.stringify(query))) {
-      //   this.openlink = this.storage.get(JSON.stringify(query))
-      //   return
-      // }
       if (this.openlink) return
 
       const loading = Toast.loading({
@@ -401,11 +391,9 @@ export default {
         expire_interval: 1,
         expire_time: 1630132832,
       })
-      // console.log(loading)
       loading.clear()
       if (res.code === 200) {
         this.openlink = res.data.openlink
-        // this.storage.set(JSON.stringify(query), res.data.openlink)
       }
     },
 
