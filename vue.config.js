@@ -44,6 +44,11 @@ module.exports = {
       template: 'public/index.html',
       title: '权益卡',
     },
+    recharge: {
+      entry: 'src/modules/recharge/main.js',
+      template: 'public/index.html',
+      title: '充值',
+    },
   },
   css: {
     loaderOptions: {

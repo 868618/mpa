@@ -70,7 +70,7 @@
 
     <div class="sticky_bottom">
         <div class="agreement active" @click="handleTapAgree">
-            点击{{card_info.button_text}}即代表您同意 <text>《碧生源储值卡用户须知》</text>
+            点击{{card_info.button_text}}即代表您同意 <span>《碧生源储值卡用户须知》</span>
         </div>
         <div class="recharge">
             <div class="text">
