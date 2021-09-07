@@ -233,6 +233,7 @@ export default {
     /*
       进入支付宝时候的逻辑
     */
+    // await this.checkAndJump()
     if (this.isInAliPay) {
       /*
         没有拿到auth_code时候的逻辑
@@ -309,8 +310,7 @@ export default {
         在支付宝的环境就去唤起支付
       */
       if (this.isInAliPay) {
-        this.pay()
-        return
+        window.location.href.includes('auth_code') && this.tradeNO ? this.pay() : this.jumpAndGetAuthCode()
       }
       /*
         不在支付宝环境和腾讯环境的时候 直接去唤起支付宝

@@ -1,7 +1,7 @@
 <template>
     <div class="recharge">
         <header class="header">
-            <p class="tip">输入充值金额（元）</p>
+            <p class="header_tip">输入充值金额（元）</p>
             <div class="money">
                 <b>¥</b>
                 <input type="text" v-focus>
@@ -49,14 +49,13 @@ export default {
     .recharge{
         .header {
             margin: 0 24px;
-            // background: pink;
-            // height: 300px;
             padding-top: 30px;
-            .tip {
+            .header_tip {
                 font-size: 24px;
                 font-family: PingFang, PingFang-Regular;
                 font-weight: 400;
-                color: #333333;
+                color: #333;
+                text-align: left;
             }
 
             .money {

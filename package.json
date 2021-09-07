@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "lint": "vue-cli-service lint",
+    "analyzer": "cross-env ANALYZER=true vue-cli-service build --mode production",
+    "build:dev": "cross-env CONSOLE=true vue-cli-service build --mode development",
+    "build:pro": "vue-cli-service build --mode production",
     "dev": "cross-env CONSOLE=true vue-cli-service serve --mode development",
     "dev:pro": "cross-env CONSOLE=true vue-cli-service serve --mode production",
-    "build:pro": "vue-cli-service build --mode production",
-    "build:dev": "cross-env CONSOLE=true vue-cli-service build --mode development",
-    "analyzer": "cross-env ANALYZER=true vue-cli-service build --mode production",
-    "lint": "vue-cli-service lint",
     "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
     "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push"
   },
@@ -26,11 +26,13 @@
     "vconsole-webpack-plugin": "^1.7.1",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-router": "^3.2.0",
     "webpack-bundle-analyzer": "^4.4.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "^4.5.13",
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-airbnb": "^5.0.2",
     "babel-eslint": "^10.1.0",

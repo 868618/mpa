@@ -14,7 +14,7 @@ module.exports = {
     'no-console': 0,
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'import/no-unresolved': 0,
-    "semi": 0,
+    semi: 0,
     'max-len': ['error', { code: 280 }],
     'import/extensions': 0,
     'no-unused-expressions': 0,
@@ -23,7 +23,7 @@ module.exports = {
     'arrow-parens': 0,
     'no-return-assign': 0,
     'no-underscore-dangle': 0,
-    'camelcase': 0,
-    'object-curly-newline': 0
+    camelcase: 0,
+    'object-curly-newline': 0,
   },
 };
