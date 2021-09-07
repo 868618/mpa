@@ -384,13 +384,14 @@ export default {
         forbidClick: true,
         duration: 0,
       })
-      const query = JSON.parse(JSON.stringify(this.$mp.query))
+      console.log(this.query)
+      const query = JSON.parse(JSON.stringify(this.query))
       delete query.key
       const res = await api.getScheme({
         // path: 'pages/user/user',
         // query: '',
         path: 'mermall/pages/topup/index',
-        query: Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&'),
+        query: Object.entries(query).filter(([k]) => !['key', '_um_ssrc', '_um_sts'].includes(k)).map(([k, v]) => `${k}=${v}`).join('&'),
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
