@@ -390,7 +390,7 @@ export default {
         // path: 'pages/user/user',
         // query: '',
         path: 'mermall/pages/topup/index',
-        query,
+        query: Object.entries(query).map(([k, v]) => `${k}=${v}`).join('&'),
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
