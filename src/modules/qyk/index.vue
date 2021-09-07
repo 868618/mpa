@@ -313,6 +313,7 @@ export default {
         console.log("window.location.href.includes('auth_code')", window.location.href.includes('auth_code'))
         console.log('this.tradeNO', this.tradeNO)
         window.location.href.includes('auth_code') && this.tradeNO ? this.pay() : this.jumpAndGetAuthCode()
+        return
       }
       /*
         不在支付宝环境和腾讯环境的时候 直接去唤起支付宝
