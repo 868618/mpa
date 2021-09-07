@@ -384,11 +384,13 @@ export default {
         forbidClick: true,
         duration: 0,
       })
+      const query = JSON.parse(JSON.stringify(this.$mp.query))
+      delete query.key
       const res = await api.getScheme({
-        path: 'pages/user/user',
-        // path: 'mermall/pages/topup/index',
-        // query,
-        query: '',
+        // path: 'pages/user/user',
+        // query: '',
+        path: 'mermall/pages/topup/index',
+        query,
         is_expire: true,
         expire_type: 1,
         expire_interval: 1,
