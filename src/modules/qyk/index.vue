@@ -372,7 +372,8 @@ export default {
       const redirect = window.encodeURIComponent(transformUrl)
 
       const app_id = await this.getNewAppId()
-      window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${app_id}&scope=auth_base&redirect_uri=${redirect}`
+      // window.location.href = `https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${app_id}&scope=auth_base&redirect_uri=${redirect}`
+      window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${app_id}&scope=auth_base&redirect_uri=${redirect}`)
     },
 
     async getNewAppId() {
