@@ -9,7 +9,7 @@
         </header>
 
         <div class="btn">
-            <Button color="#F1270D" block round>确认充值</Button>
+            <Button color="#F1270D" block round >确认充值</Button>
         </div>
 
         <section class="toalipay">
@@ -23,6 +23,7 @@
 
 <script>
 import { Button } from 'vant'
+import qyk from '@/api/qyk'
 
 export default {
   name: 'Recharge',
@@ -40,6 +41,17 @@ export default {
       inserted(el) {
         el.focus()
       },
+    },
+  },
+
+  methods: {
+    async makeSn() {
+      const res = await qyk.recharge({
+        type: 1,
+        pdr_amount: this.value,
+      })
+
+      console.log('res', res)
     },
   },
 }
