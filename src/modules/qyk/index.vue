@@ -217,6 +217,7 @@ export default {
         isShowDetail: false,
       },
       isHasAuthCode: false,
+      tradeNOMap: new Map(),
     }
   },
 
@@ -355,10 +356,21 @@ export default {
     },
 
     pay() {
+      if (this.tradeNoMap.get(this.tradeNo)) {
+        window.ap.alert({
+          title: '',
+          message: '返回小程序查看',
+          button: '确定',
+        }, event => {
+          console.log('event', JSON.stringify(event))
+        })
+        return
+      }
       const _this = this
       const { tradeNO } = this
       window.ap.tradePay({ tradeNO }, ({ resultCode }) => {
         if (resultCode !== '9000') return
+        _this.tradeNoMap.set(this.tradeNo, true)
         _this.getDetail()
       })
     },
