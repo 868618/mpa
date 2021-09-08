@@ -271,7 +271,9 @@ export default {
 
     onShow() {
       document.addEventListener('visibilitychange', () => {
-      // 用户打开或回到页面
+        console.log('this.currentCardInfo', this.currentCardInfo)
+        console.log('this.query', this.query)
+        // 用户打开或回到页面
         document.visibilityState === 'visible' && this.handleTapCard({ ...this.query, ...this.currentCardInfo })
       })
     },
