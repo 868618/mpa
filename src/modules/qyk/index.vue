@@ -371,7 +371,10 @@ export default {
       window.ap.tradePay({ tradeNO }, ({ resultCode }) => {
         if (resultCode !== '9000') return
         _this.tradeNOMap.set(this.tradeNo, true)
-        setTimeout(_this.getDetail, 2000)
+        setTimeout(() => {
+          _this.getDetail()
+          console.log('刷新一下————————————————————————————————————————————————————')
+        }, 2000)
       })
     },
 
