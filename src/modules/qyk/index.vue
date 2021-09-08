@@ -14,7 +14,7 @@
 
   <nav class="nav" v-if="isShowSwiper">
     <section v-swiper:mySwiper="swiperOptions">
-      <section class="swiper-wrapper">
+      <section :class="['swiper-wrapper', isHasAuthCode ? 'swiper-no-swiping' : '']">
         <section class="swiper-slide slide" :class="{ active: clickedIndex == index }" v-for="(item, index) in card_info.card_list" :key="index">
           <div class="card">{{ item.card_name }}</div>
         </section>
@@ -183,6 +183,7 @@ export default {
             const { clientWidth } = slides[clickedIndex]
             const distance = Array.from(slides).slice(0, clickedIndex).reduce((pre, cur) => pre + cur.clientWidth, 0)
             this.translateTo(((width - clientWidth) * 0.5) - distance, 0, true, true)
+            console.log(this)
           },
         },
       },
@@ -215,6 +216,7 @@ export default {
         isShowToBrowser: false,
         isShowDetail: false,
       },
+      isHasAuthCode: false,
     }
   },
 
@@ -246,6 +248,7 @@ export default {
       /*
         有auth_code的时候 直接去拿页面详情 同时也去唤起支付
       */
+      this.isHasAuthCode = true
       this.handleTapCard(this.query)
       this.initPay()
       return
