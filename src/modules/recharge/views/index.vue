@@ -4,7 +4,7 @@
             <p class="header_tip">输入充值金额（元）</p>
             <div class="money">
                 <b>¥</b>
-                <input type="text" v-focus>
+                <input type="text" v-focus v-model="value">
             </div>
         </header>
 
@@ -32,7 +32,7 @@ export default {
 
   data() {
     return {
-      value: '12',
+      value: '',
     }
   },
   directives: {

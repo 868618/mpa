@@ -299,6 +299,7 @@ export default {
     },
 
     handleTapBtn() {
+      if (!this.card_info.button_status) return
       /*
         在腾讯的环境就去微信小程序
       */
