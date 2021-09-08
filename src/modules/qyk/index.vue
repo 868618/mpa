@@ -356,7 +356,7 @@ export default {
     },
 
     pay() {
-      if (this.tradeNoMap.get(this.tradeNo)) {
+      if (this.tradeNOMap.get(this.tradeNo)) {
         window.ap.alert({
           title: '',
           message: '返回小程序查看',
@@ -370,7 +370,7 @@ export default {
       const { tradeNO } = this
       window.ap.tradePay({ tradeNO }, ({ resultCode }) => {
         if (resultCode !== '9000') return
-        _this.tradeNoMap.set(this.tradeNo, true)
+        _this.tradeNOMap.set(this.tradeNo, true)
         _this.getDetail()
       })
     },
