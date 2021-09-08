@@ -361,8 +361,6 @@ export default {
           title: '',
           message: '返回小程序查看',
           button: '确定',
-        }, event => {
-          console.log('event', JSON.stringify(event))
         })
         return
       }
