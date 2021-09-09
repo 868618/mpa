@@ -136,7 +136,7 @@ import { Toast, Dialog } from 'vant';
 import qyk from '@/api/qyk'
 import api from '@/api'
 import PubMask from '@/component/pub_mask'
-import { isAliPayApp, isWeChat, stringify } from '@/utils/tool'
+import { isAliPayApp, isWeChat, stringify, sleep } from '@/utils/tool'
 
 Vue.use(Toast)
 
@@ -368,13 +368,18 @@ export default {
       }
       const _this = this
       const { tradeNO } = this
-      window.ap.tradePay({ tradeNO }, ({ resultCode }) => {
+      window.ap.tradePay({ tradeNO }, async ({ resultCode }) => {
         if (resultCode !== '9000') return
         _this.tradeNOMap.set(this.tradeNo, true)
-        setTimeout(() => {
+
+        const startTime = Date.now()
+
+        for (let now = Date.now(); now - startTime < 10000; now = Date.now()) {
+          // eslint-disable-next-line no-await-in-loop
+          await sleep()
           _this.getDetail()
           console.log('刷新一下————————————————————————————————————————————————————')
-        }, 2000)
+        }
       })
     },
 

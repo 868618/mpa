@@ -21,9 +21,12 @@ const secondToTime = time => {
   return `${h}:${m}:${s}`
 }
 
+const sleep = (time = 1000) => new Promise(resolve => setTimeout(resolve, time))
+
 export {
   isAliPayApp,
   stringify,
   secondToTime,
   isWeChat,
+  sleep,
 }
