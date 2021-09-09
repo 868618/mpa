@@ -4,12 +4,12 @@
             <p class="header_tip">输入充值金额（元）</p>
             <div class="money">
                 <b>¥</b>
-                <input type="text" v-focus v-model="value">
+                <input type="text" v-focus v-model="money">
             </div>
         </header>
 
         <div class="btn">
-            <Button color="#F1270D" block round >确认充值</Button>
+            <Button color="#F1270D" block round @click="handleTap">确认充值</Button>
         </div>
 
         <section class="toalipay">
@@ -22,8 +22,14 @@
 </template>
 
 <script>
-import { Button } from 'vant'
+import Vue from 'vue'
+import { Button, Toast } from 'vant'
+import qs from 'qs'
 import qyk from '@/api/qyk'
+import { isAliPayApp, isWeChat } from '@/utils/tool'
+import pub from '@/api/pub'
+
+Vue.use(Toast)
 
 export default {
   name: 'Recharge',
@@ -33,9 +39,11 @@ export default {
 
   data() {
     return {
-      value: '',
+      money: '',
+      openLink: null,
     }
   },
+
   directives: {
     focus: {
       inserted(el) {
@@ -44,14 +52,48 @@ export default {
     },
   },
 
-  methods: {
-    async makeSn() {
-      const res = await qyk.recharge({
-        type: 1,
-        pdr_amount: this.value,
-      })
+  computed: {
+    environment() {
+      // eslint-disable-next-line no-nested-ternary
+      return isAliPayApp() ? 'alipay' : (isWeChat() ? 'wechat' : 'other')
+    },
+  },
 
-      console.log('res', res)
+  async created() {
+    console.log(this.environment)
+    if (this.environment === 'wechat') {
+      if (!this.openLink) {
+        await this.getOpenLink()
+      }
+      window.location.href = this.openLink
+    }
+  },
+
+  methods: {
+    async handleTap() {
+      const { money: pdr_amount } = this
+
+      if (!pdr_amount) {
+        Toast('请输入充值金额')
+        return
+      }
+      const { key } = this.$route.query
+      const { code, data } = await qyk.recharge(qs.stringify({
+        type: 1,
+        pdr_amount,
+        key,
+      }))
+
+      if (code === 200) {
+        console.log('data.pdr_sn', data.pdr_sn)
+      }
+    },
+
+    async getOpenLink() {
+      const { code, data } = await pub.getScheme({ path: 'pages/recharge/detail', query: `money=${this.money}` })
+      if (code === 200) {
+        this.openLink = data.openlink
+      }
     },
   },
 }

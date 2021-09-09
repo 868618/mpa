@@ -1,5 +1,9 @@
 import Http from '@/utils/http'
 
+import api from '@/api'
+
+const { getScheme } = api
+
 class Pub extends Http {
   upLoadFile({ key, flag, param }) {
     return this.request({
@@ -11,6 +15,8 @@ class Pub extends Http {
       method: 'post',
     })
   }
+
+  getScheme = getScheme
 }
 
 export default new Pub()

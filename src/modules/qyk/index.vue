@@ -218,6 +218,8 @@ export default {
       },
       isHasAuthCode: false,
       tradeNOMap: new Map(),
+
+      dialog: null,
     }
   },
 
@@ -265,8 +267,15 @@ export default {
 
     async handleTapAgree() {
       const doc_code = 'card_agreement'
+      if (this.dialog) {
+        Dialog(this.dialog)
+        return
+      }
       const { code, data: { doc_title: title, doc_content: message } } = await qyk.getAgree({ doc_code })
-      if (code === 200) Dialog({ message, title, messageAlign: 'left' })
+      if (code === 200) {
+        Dialog({ message, title, messageAlign: 'left' })
+        this.dialog = { message, title, messageAlign: 'left' }
+      }
     },
 
     onShow() {
