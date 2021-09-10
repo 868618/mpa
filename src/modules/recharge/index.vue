@@ -66,7 +66,7 @@ export default {
 
   async created() {
     await this.init()
-    this.isInitialized = true
+    // this.isInitialized = true
   },
 
   methods: {
@@ -95,7 +95,7 @@ export default {
         }
         // console.log('window.wx', window.wx)
       }
-      // this.isInitialized = true
+      this.isInitialized = true
     },
 
     async getIdentity(params) {
