@@ -137,7 +137,8 @@ export default {
     },
 
     async getWechatAuthCode() {
-      const { app_id: appid } = await pub.getAppId({ type: 'wechat' })
+      const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'wechat' })
+      if (code !== 200) return
       const redirect_uri = window.encodeURI(window.location.href)
       const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
       window.location.replace(url)
