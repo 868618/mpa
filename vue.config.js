@@ -44,10 +44,26 @@ module.exports = {
       template: 'public/index.html',
       title: '权益卡',
     },
+    // recharge: {
+    //   entry: 'src/modules/recharge/main.js',
+    //   template: 'src/modules/recharge/public/index.html',
+    //   title: '充值',
+    // },
     recharge: {
       entry: 'src/modules/recharge/main.js',
       template: 'src/modules/recharge/public/index.html',
       title: '充值',
+    },
+    refresh: {
+      entry: 'src/modules/recharge/refresh.js',
+      template: 'src/modules/recharge/public/index.html',
+      title: '等待支付结果',
+    },
+
+    result: {
+      entry: 'src/modules/recharge/result.js',
+      template: 'src/modules/recharge/public/index.html',
+      title: '充值结果',
     },
   },
   css: {

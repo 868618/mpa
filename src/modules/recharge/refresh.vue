@@ -20,7 +20,7 @@
             width: 216px;
             height: 216px;
             margin: 0 auto;
-            background: url('../../../assets/images/recharge_light.png') no-repeat center;
+            background: url('../../assets/images/recharge_light.png') no-repeat center;
             background-size: 100%;
             display: flex;
             flex-direction: column;

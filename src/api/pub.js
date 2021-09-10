@@ -19,6 +19,20 @@ class Pub extends Http {
   getScheme = getScheme
 
   getNewAppId = getNewAppId
+
+  getAppId(params) {
+    return this.request({
+      url: '/api/frontend/oauth/oauth/get_config',
+      params,
+    })
+  }
+
+  getOpenId(params) {
+    return this.request({
+      params,
+      url: '/api/frontend/oauth/oauth/index',
+    })
+  }
 }
 
 export default new Pub()

@@ -1,5 +1,5 @@
 <template>
-    <div class="recharge">
+    <div class="recharge" v-if="isInitialized">
         <header class="header">
             <p class="header_tip">输入充值金额（元）</p>
             <div class="money">
@@ -39,6 +39,9 @@ export default {
   data() {
     return {
       money: '',
+      isInitialized: false,
+      identity: null,
+      query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
     }
   },
 
@@ -66,13 +69,32 @@ export default {
       const { environment } = this
       const { href } = window.location
       if (environment !== 'other') {
-        if (environment === 'alipay' && !href.includes('auth_code')) {
-          this.getAlipayAuthCode()
+        if (environment === 'alipay') {
+          if (!href.includes('auth_code')) {
+            this.getAlipayAuthCode()
+            return
+          }
+          this.getIdentity({ code: this.query.auth_code, type: 'ali' })
           return
         }
+
+        if (environment === 'wechat') {
+          if (!href.includes('code')) {
+            this.getWechatAuthCode()
+            return
+          }
+          this.getIdentity({ code: this.query.code, type: 'wechat' })
+        }
         await this.addWechatOrAlipayJsSdk(environment)
-        console.log('window.wx', window.wx)
+        // console.log('window.wx', window.wx)
       }
+      this.isInitialized = true
+    },
+
+    async getIdentity(data) {
+      console.log('去获取openid', data)
+      const res = await pub.getOpenId(data)
+      console.log('getIdentity______', res)
     },
 
     addWechatOrAlipayJsSdk(name = 'wechat') {
@@ -96,7 +118,6 @@ export default {
       }
 
       if (this.environment === 'wechat') {
-        // console.log('去微信支付')
         this.payByWechat()
         return
       }
@@ -104,29 +125,34 @@ export default {
       if (this.environment === 'alipay') {
         this.payByAlipay()
       }
-
-      // const { key } = this.$route.query
-      // const { code, data } = await qyk.recharge(qs.stringify({
-      //   type: 1,
-      //   pdr_amount,
-      //   key,
-      // }))
-
-      // if (code === 200) {
-      //   console.log('data.pdr_sn', data.pdr_sn)
-      // }
     },
     async getAlipayAuthCode() {
       if (window.location.href.includes('auth_code')) return
-      const { code, data } = await pub.getNewAppId()
-      if (code === 200) {
-        const redirect = window.encodeURIComponent(window.location.href)
-        window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${data.app_id}&scope=auth_base&redirect_uri=${redirect}`)
-      }
+      // const { code, data } = await pub.getNewAppId()
+      const { app_id: appid } = await pub.getAppId({ type: 'ali' })
+      const redirect = window.encodeURIComponent(window.location.href)
+
+      console.log('ali appid', appid)
+      window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${appid}&scope=auth_base&redirect_uri=${redirect}`)
+      // if (code === 200) {
+      //   const redirect = window.encodeURIComponent(window.location.href)
+      //   window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${data.app_id}&scope=auth_base&redirect_uri=${redirect}`)
+      // }
+    },
+
+    async getWechatAuthCode() {
+      const { app_id: appid } = await pub.getAppId({ type: 'wechat' })
+      const redirect_uri = window.encodeURI(window.location.href)
+      const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
+      window.location.replace(url)
     },
 
     async evokeAlipay() {
-      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
+      const { app_id: appid } = await pub.getAppId({ type: 'ali' })
+
+      console.log('ali appid', appid)
+
+      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {

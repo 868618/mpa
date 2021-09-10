@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Index from './index.vue'
+import Refresh from './refresh.vue'
 import '@/assets/css/reset.css'
 import 'lib-flexible/flexible.js'
 // import router from './router'
@@ -8,7 +8,5 @@ import 'lib-flexible/flexible.js'
 Vue.config.productionTip = false
 
 new Vue({
-  render: (h) => h(Index),
-  // el: '#app',
-  // router,
+  render: (h) => h(Refresh),
 }).$mount('#app')

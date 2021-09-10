@@ -50,7 +50,7 @@ export default {
     return {
       placeholder: '在此填写输入充值的账户手机号和顾问名称有助于加快充值速度',
       fileList: [],
-      isSuccess: this.$route.query.state === 'success',
+      isSuccess: window.location.href.includes('success'),
     }
   },
 
