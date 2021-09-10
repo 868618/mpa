@@ -27,6 +27,7 @@ import { Button, Toast } from 'vant'
 // import qyk from '@/api/qyk'
 import { isAliPayApp, isWeChat } from '@/utils/tool'
 import pub from '@/api/pub'
+import api from '@/api'
 
 Vue.use(Toast)
 
@@ -143,12 +144,14 @@ export default {
     },
 
     async evokeAlipay() {
-      const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
+      // const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
 
-      console.log('ali code', code)
-      console.log('ali appid', appid)
+      const { code, data } = await api.getNewAppId()
+
+      // console.log('ali code', code)
+      // console.log('ali appid', appid)
       if (code !== 200) return
-      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
+      window.location.href = `alipays://platformapi/startapp?appId=${data.app_id}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
