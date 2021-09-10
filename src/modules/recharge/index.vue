@@ -193,9 +193,15 @@ export default {
 
     async payByAlipay() {
       console.log('支付宝支付')
-      const { auth_code } = this.query
-      const result = await pub.getOpenId({ code: auth_code, type: 'ali' })
-      console.log('result', result)
+      const { user_key, environment } = this
+      const pay_mode = environment === 'wechat' ? 'wxpay' : 'alipay'
+      const res = await qyk.recharge(qs.stringify({
+        type: 3,
+        pdr_amount: this.money,
+        user_key,
+        pay_mode,
+      }))
+      console.log('res', res)
     },
   },
 }
