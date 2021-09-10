@@ -29,6 +29,8 @@ import { isAliPayApp, isWeChat } from '@/utils/tool'
 import pub from '@/api/pub'
 import api from '@/api'
 
+import qyk from '@/api/qyk'
+
 Vue.use(Toast)
 
 export default {
@@ -92,10 +94,20 @@ export default {
       this.isInitialized = true
     },
 
-    async getIdentity(data) {
-      console.log('去获取openid', data)
-      const res = await pub.getOpenId(data)
-      console.log('getIdentity______', res)
+    async getIdentity(params) {
+      console.log('去获取openid', params)
+      const { code, data: { user_key } } = await pub.getOpenId(params)
+      console.log('getIdentity______', user_key)
+
+      if (code !== 200) return
+      const res = await qyk.recharge({
+        type: 1,
+        pdr_amount: 10,
+        user_key,
+        pay_mode: this.environment === 'wechat' ? 'wxpay' : 'alipay',
+      })
+
+      console.log('res', res)
     },
 
     addWechatOrAlipayJsSdk(name = 'wechat') {
@@ -148,11 +160,11 @@ export default {
       // const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
 
       const { code, data } = await api.getNewAppId()
-
-      // console.log('ali code', code)
+      console.log('data', data)
+      console.log('ali code', code)
       // console.log('ali appid', appid)
-      if (code !== 200) return
-      window.location.href = `alipays://platformapi/startapp?appId=${data.app_id}&url=${window.encodeURIComponent(window.location.href)}`
+      // if (code !== 200) return
+      // window.location.href = `alipays://platformapi/startapp?appId=${data.app_id}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {

@@ -69,6 +69,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Use
 
 /***/ }),
 
+/***/ "./src/api/qyk.js":
+/*!************************!*\
+  !*** ./src/api/qyk.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/classCallCheck */ \"./node_modules/@babel/runtime/helpers/esm/classCallCheck.js\");\n/* harmony import */ var _Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createClass */ \"./node_modules/@babel/runtime/helpers/esm/createClass.js\");\n/* harmony import */ var _Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/inherits */ \"./node_modules/@babel/runtime/helpers/esm/inherits.js\");\n/* harmony import */ var _Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_createSuper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/@babel/runtime/helpers/esm/createSuper */ \"./node_modules/@babel/runtime/helpers/esm/createSuper.js\");\n/* harmony import */ var _utils_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/utils/http */ \"./src/utils/http.js\");\n\n\n\n\n\n\nvar Qyk = /*#__PURE__*/function (_Http) {\n  Object(_Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_inherits__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(Qyk, _Http);\n\n  var _super = Object(_Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_createSuper__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(Qyk);\n\n  function Qyk() {\n    Object(_Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_classCallCheck__WEBPACK_IMPORTED_MODULE_0__[\"default\"])(this, Qyk);\n\n    return _super.apply(this, arguments);\n  }\n\n  Object(_Users_kennyliu_Desktop_work_codes_mpa_node_modules_babel_runtime_helpers_esm_createClass__WEBPACK_IMPORTED_MODULE_1__[\"default\"])(Qyk, [{\n    key: \"getDCardDetail\",\n    value: function getDCardDetail(params) {\n      var headers = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};\n      return this.request({\n        url: '/../../api/frontend/card/show',\n        params: params,\n        headers: headers\n      });\n    }\n    /*\n          获取 pdr_sn\n      */\n\n  }, {\n    key: \"recharge\",\n    value: function recharge(data) {\n      return this.request({\n        url: '/cmobile/index.php?app=cash&mod=recharge',\n        data: data,\n        method: 'POST'\n      });\n    }\n  }, {\n    key: \"getAgree\",\n    value: function getAgree(params) {\n      return this.request({\n        url: '/api/frontend/agreement/index',\n        params: params // method: 'POST',\n\n      });\n    }\n  }]);\n\n  return Qyk;\n}(_utils_http__WEBPACK_IMPORTED_MODULE_4__[\"default\"]);\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (new Qyk());\n\n//# sourceURL=webpack:///./src/api/qyk.js?");
+
+/***/ }),
+
 /***/ "./src/assets/css/reset.css":
 /*!**********************************!*\
   !*** ./src/assets/css/reset.css ***!
