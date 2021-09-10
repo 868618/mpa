@@ -152,7 +152,7 @@ export default {
 
       console.log('ali appid', appid)
 
-      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
+      // window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
