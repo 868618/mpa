@@ -45,6 +45,7 @@ export default {
       isInitialized: false,
       identity: null,
       query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
+      user_key: null,
     }
   },
 
@@ -98,16 +99,8 @@ export default {
       console.log('去获取openid', params)
       const { code, data: { user_key } } = await pub.getOpenId(params)
       console.log('getIdentity______', user_key)
-
       if (code !== 200) return
-      const res = await qyk.recharge({
-        type: 1,
-        pdr_amount: 10,
-        user_key,
-        pay_mode: this.environment === 'wechat' ? 'wxpay' : 'alipay',
-      })
-
-      console.log('res', res)
+      this.user_key = user_key
     },
 
     addWechatOrAlipayJsSdk(name = 'wechat') {
@@ -157,18 +150,28 @@ export default {
     },
 
     async evokeAlipay() {
-      // const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
-
-      // const { code, data } = await api.getNewAppId()
-      // console.log('data', data)
-      // console.log('ali code', code)
-      // console.log('ali appid', appid)
-      // if (code !== 200) return
       window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
       console.log('微信支付')
+      Toast.loading({
+        forbidClick: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
+      const { user_key, environment } = this
+      const pay_mode = environment === 'wechat' ? 'wxpay' : 'alipay'
+
+      const res = await qyk.recharge({
+        type: 1,
+        pdr_amount: this.money,
+        user_key,
+        pay_mode,
+      })
+      Toast.clear()
+
+      console.log('微信支付 res', res)
     },
 
     async payByAlipay() {
