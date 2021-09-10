@@ -27,7 +27,7 @@ import { Button, Toast } from 'vant'
 // import qyk from '@/api/qyk'
 import { isAliPayApp, isWeChat } from '@/utils/tool'
 import pub from '@/api/pub'
-import api from '@/api'
+// import api from '@/api'
 
 import qyk from '@/api/qyk'
 
@@ -159,12 +159,12 @@ export default {
     async evokeAlipay() {
       // const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
 
-      const { code, data } = await api.getNewAppId()
-      console.log('data', data)
-      console.log('ali code', code)
+      // const { code, data } = await api.getNewAppId()
+      // console.log('data', data)
+      // console.log('ali code', code)
       // console.log('ali appid', appid)
       // if (code !== 200) return
-      // window.location.href = `alipays://platformapi/startapp?appId=${data.app_id}&url=${window.encodeURIComponent(window.location.href)}`
+      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
