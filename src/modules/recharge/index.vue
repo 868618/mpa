@@ -128,16 +128,11 @@ export default {
     },
     async getAlipayAuthCode() {
       if (window.location.href.includes('auth_code')) return
-      // const { code, data } = await pub.getNewAppId()
-      const { app_id: appid } = await pub.getAppId({ type: 'ali' })
+      const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
+      if (code !== 200) return
       const redirect = window.encodeURIComponent(window.location.href)
-
       console.log('ali appid', appid)
       window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${appid}&scope=auth_base&redirect_uri=${redirect}`)
-      // if (code === 200) {
-      //   const redirect = window.encodeURIComponent(window.location.href)
-      //   window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${data.app_id}&scope=auth_base&redirect_uri=${redirect}`)
-      // }
     },
 
     async getWechatAuthCode() {
@@ -148,11 +143,11 @@ export default {
     },
 
     async evokeAlipay() {
-      const { app_id: appid } = await pub.getAppId({ type: 'ali' })
+      const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
 
-      console.log('ali appid', appid)
-
-      // window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
+      // console.log('ali appid', appid)
+      if (code !== 200) return
+      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
