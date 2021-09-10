@@ -9,13 +9,12 @@
         </header>
 
         <div class="btn">
-            <Button color="#F1270D" block round @click="handleTap">确认充值</Button>
+            <Button color="#F1270D" block round @click="handleTap" :disabled="environment == 'other'">确认充值</Button>
         </div>
 
-        <section class="toalipay">
+        <section class="toalipay" v-if="environment == 'other'" @click="evokeAlipay">
             <p class="tip">如使用微信请使用微信扫码打开此页面</p>
             <div class="alipay_btn">跳转支付宝</div>
-            <!-- <Button color="#F1270D" plain round>跳转支付宝</Button> -->
         </section>
 
     </div>
@@ -24,8 +23,8 @@
 <script>
 import Vue from 'vue'
 import { Button, Toast } from 'vant'
-import qs from 'qs'
-import qyk from '@/api/qyk'
+// import qs from 'qs'
+// import qyk from '@/api/qyk'
 import { isAliPayApp, isWeChat } from '@/utils/tool'
 import pub from '@/api/pub'
 
@@ -40,7 +39,6 @@ export default {
   data() {
     return {
       money: '',
-      openLink: null,
     }
   },
 
@@ -54,46 +52,89 @@ export default {
 
   computed: {
     environment() {
-      // eslint-disable-next-line no-nested-ternary
       return isAliPayApp() ? 'alipay' : (isWeChat() ? 'wechat' : 'other')
     },
   },
 
   async created() {
-    console.log(this.environment)
-    if (this.environment === 'wechat') {
-      if (!this.openLink) {
-        await this.getOpenLink()
-      }
-      window.location.href = this.openLink
-    }
+    this.init()
   },
 
   methods: {
+
+    async init() {
+      const { environment } = this
+      const { href } = window.location
+      if (environment !== 'other') {
+        if (environment === 'alipay' && !href.includes('auth_code')) {
+          this.getAlipayAuthCode()
+          return
+        }
+        await this.addWechatOrAlipayJsSdk(environment)
+        console.log('window.wx', window.wx)
+      }
+    },
+
+    addWechatOrAlipayJsSdk(name = 'wechat') {
+      return new Promise(((resolve, reject) => {
+        const script = document.createElement('script')
+        document.head.appendChild(script)
+        const alipay_sdk = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
+        const wechat_sdk = 'http://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+        script.onload = resolve
+        script.onerror = reject
+        script.setAttribute('src', name === 'wechat' ? wechat_sdk : alipay_sdk)
+      }))
+    },
+
     async handleTap() {
       const { money: pdr_amount } = this
 
       if (!pdr_amount) {
-        Toast('请输入充值金额')
+        this.$toast.fail('请输入充值金额')
         return
       }
-      const { key } = this.$route.query
-      const { code, data } = await qyk.recharge(qs.stringify({
-        type: 1,
-        pdr_amount,
-        key,
-      }))
 
+      if (this.environment === 'wechat') {
+        // console.log('去微信支付')
+        this.payByWechat()
+        return
+      }
+
+      if (this.environment === 'alipay') {
+        this.payByAlipay()
+      }
+
+      // const { key } = this.$route.query
+      // const { code, data } = await qyk.recharge(qs.stringify({
+      //   type: 1,
+      //   pdr_amount,
+      //   key,
+      // }))
+
+      // if (code === 200) {
+      //   console.log('data.pdr_sn', data.pdr_sn)
+      // }
+    },
+    async getAlipayAuthCode() {
+      if (window.location.href.includes('auth_code')) return
+      const { code, data } = await pub.getNewAppId()
       if (code === 200) {
-        console.log('data.pdr_sn', data.pdr_sn)
+        const redirect = window.encodeURIComponent(window.location.href)
+        window.location.replace(`https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=${data.app_id}&scope=auth_base&redirect_uri=${redirect}`)
       }
     },
 
-    async getOpenLink() {
-      const { code, data } = await pub.getScheme({ path: 'pages/recharge/detail', query: `money=${this.money}` })
-      if (code === 200) {
-        this.openLink = data.openlink
-      }
+    async evokeAlipay() {
+      window.location.href = `alipays://platformapi/startapp?appId=20000067&url=${window.encodeURIComponent(window.location.href)}`
+    },
+
+    async payByWechat() {
+      console.log('微信支付')
+    },
+
+    async payByAlipay() {
+      console.log('支付宝支付')
     },
   },
 }

@@ -24,7 +24,7 @@ const routes = [
   {
     path: '/result',
     name: 'result',
-    component: () => import(/* webpackChunkName: "recharge_success" */ '../views/result.vue'),
+    component: () => import(/* webpackChunkName: "recharge_result" */ '../views/result.vue'),
   },
 ]
 

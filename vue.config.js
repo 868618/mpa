@@ -46,7 +46,7 @@ module.exports = {
     },
     recharge: {
       entry: 'src/modules/recharge/main.js',
-      template: 'public/index.html',
+      template: 'src/modules/recharge/public/index.html',
       title: '充值',
     },
   },

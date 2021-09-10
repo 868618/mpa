@@ -19,13 +19,13 @@
         .header {
             width: 216px;
             height: 216px;
-            background: red;
             margin: 0 auto;
             background: url('../../../assets/images/recharge_light.png') no-repeat center;
             background-size: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
             font-family: PingFangSC, PingFangSC-Regular;
             color: #fff;
 

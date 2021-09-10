@@ -2,7 +2,7 @@ import Http from '@/utils/http'
 
 import api from '@/api'
 
-const { getScheme } = api
+const { getScheme, getNewAppId } = api
 
 class Pub extends Http {
   upLoadFile({ key, flag, param }) {
@@ -17,6 +17,8 @@ class Pub extends Http {
   }
 
   getScheme = getScheme
+
+  getNewAppId = getNewAppId
 }
 
 export default new Pub()
