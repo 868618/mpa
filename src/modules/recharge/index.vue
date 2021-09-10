@@ -147,8 +147,8 @@ export default {
 
       console.log('ali code', code)
       console.log('ali appid', appid)
-      // if (code !== 200) return
-      // window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
+      if (code !== 200) return
+      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
