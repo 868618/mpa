@@ -4,7 +4,7 @@
             <p class="header_tip">输入充值金额（元）</p>
             <div class="money">
                 <b>¥</b>
-                <input type="text" v-focus v-model="money">
+                <input v-focus v-model="money" type="number">
             </div>
         </header>
 
@@ -16,14 +16,14 @@
             <p class="tip">如使用微信请使用微信扫码打开此页面</p>
             <div class="alipay_btn">跳转支付宝</div>
         </section>
-
+        <!-- <NumberKeyboard :show="true" /> -->
     </div>
 </template>
 
 <script>
 import Vue from 'vue'
 import { Button, Toast } from 'vant'
-// import qs from 'qs'
+import qs from 'qs'
 // import qyk from '@/api/qyk'
 import { isAliPayApp, isWeChat } from '@/utils/tool'
 import pub from '@/api/pub'
@@ -37,6 +37,7 @@ export default {
   name: 'Recharge',
   components: {
     Button,
+    // NumberKeyboard,
   },
 
   data() {
@@ -64,7 +65,8 @@ export default {
   },
 
   async created() {
-    this.init()
+    await this.init()
+    this.isInitialized = true
   },
 
   methods: {
@@ -79,6 +81,8 @@ export default {
             return
           }
           this.getIdentity({ code: this.query.auth_code, type: 'ali' })
+          await this.addWechatOrAlipayJsSdk(environment)
+          // this.isInitialized = true
           return
         }
 
@@ -89,10 +93,9 @@ export default {
           }
           this.getIdentity({ code: this.query.code, type: 'wechat' })
         }
-        await this.addWechatOrAlipayJsSdk(environment)
         // console.log('window.wx', window.wx)
       }
-      this.isInitialized = true
+      // this.isInitialized = true
     },
 
     async getIdentity(params) {
@@ -118,8 +121,9 @@ export default {
     async handleTap() {
       const { money: pdr_amount } = this
 
-      if (!pdr_amount) {
-        this.$toast.fail('请输入充值金额')
+      const reg = /(^0(\.\d{0,2})?$)|(^[1-9]\d*(\.\d{0,2})?$)/ig
+      if (!reg.test(pdr_amount)) {
+        this.$toast('请输入正确的充值金额')
         return
       }
 
@@ -145,6 +149,9 @@ export default {
       const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'wechat' })
       if (code !== 200) return
       const redirect_uri = window.encodeURI(window.location.href)
+
+      // console.log('appid__________', appid)
+      // console.log('redirect_uri', redirect_uri)
       const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
       window.location.replace(url)
     },
@@ -163,15 +170,25 @@ export default {
       const { user_key, environment } = this
       const pay_mode = environment === 'wechat' ? 'wxpay' : 'alipay'
 
-      const res = await qyk.recharge({
-        type: 1,
+      const { code, msg, data } = await qyk.recharge(qs.stringify({
+        type: 3,
         pdr_amount: this.money,
         user_key,
         pay_mode,
-      })
+      }))
       Toast.clear()
+      if (code === 200) {
+        console.log('window.WeixinJSBridge', window.WeixinJSBridge)
 
-      console.log('微信支付 res', res)
+        console.log('通过jsbridge方式去唤起支付', data)
+        window.WeixinJSBridge.invoke('getBrandWCPayRequest', data, res => {
+          console.log('WeixinJSBridge', res)
+        })
+      } else {
+        Toast(msg)
+      }
+
+      console.log('微信支付 res', data)
     },
 
     async payByAlipay() {
