@@ -188,11 +188,8 @@ export default {
 
     async payByAlipay() {
       console.log('支付宝支付')
-      this.$toast.loading({
-        forbidClick: true,
-        loadingType: 'spinner',
-        duration: 0,
-      })
+      // this.$toast.loading({ forbidClick: true, loadingType: 'spinner', duration: 0 })
+      window.ap.showLoading()
       const { user_key, environment } = this
       const pay_mode = environment === 'wechat' ? 'wxpay' : 'alipay'
       const res = await qyk.recharge(qs.stringify({
@@ -201,7 +198,8 @@ export default {
         user_key,
         pay_mode,
       }))
-      this.$toast.clear()
+      // this.$toast.clear()
+      window.ap.hideLoading()
       console.log('res', res)
     },
   },
