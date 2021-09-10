@@ -145,9 +145,10 @@ export default {
     async evokeAlipay() {
       const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'ali' })
 
-      // console.log('ali appid', appid)
-      if (code !== 200) return
-      window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
+      console.log('ali code', code)
+      console.log('ali appid', appid)
+      // if (code !== 200) return
+      // window.location.href = `alipays://platformapi/startapp?appId=${appid}&url=${window.encodeURIComponent(window.location.href)}`
     },
 
     async payByWechat() {
