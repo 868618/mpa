@@ -66,7 +66,6 @@ export default {
 
   async created() {
     await this.init()
-    // this.isInitialized = true
   },
 
   methods: {
@@ -82,8 +81,8 @@ export default {
           }
           this.getIdentity({ code: this.query.auth_code, type: 'ali' })
           await this.addWechatOrAlipayJsSdk(environment)
-          this.isInitialized = true
-          return
+          // this.isInitialized = true
+          // return
         }
 
         if (environment === 'wechat') {
@@ -93,7 +92,6 @@ export default {
           }
           this.getIdentity({ code: this.query.code, type: 'wechat' })
         }
-        // console.log('window.wx', window.wx)
       }
       this.isInitialized = true
     },
@@ -149,9 +147,6 @@ export default {
       const { code, data: { app_id: appid } } = await pub.getAppId({ type: 'wechat' })
       if (code !== 200) return
       const redirect_uri = window.encodeURI(window.location.href)
-
-      // console.log('appid__________', appid)
-      // console.log('redirect_uri', redirect_uri)
       const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
       window.location.replace(url)
     },
