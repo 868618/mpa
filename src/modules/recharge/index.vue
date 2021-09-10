@@ -193,6 +193,9 @@ export default {
 
     async payByAlipay() {
       console.log('支付宝支付')
+      const { auth_code } = this.query
+      const result = await pub.getOpenId({ code: auth_code, type: 'ali' })
+      console.log('result', result)
     },
   },
 }
