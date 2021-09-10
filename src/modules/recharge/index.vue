@@ -82,7 +82,7 @@ export default {
           }
           this.getIdentity({ code: this.query.auth_code, type: 'ali' })
           await this.addWechatOrAlipayJsSdk(environment)
-          // this.isInitialized = true
+          this.isInitialized = true
           return
         }
 
