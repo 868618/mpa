@@ -45,6 +45,7 @@ class Pub extends Http {
     return this.request({
       url: '/api/frontend/recharge/update_remark',
       data,
+      method: 'post',
     })
   }
 }

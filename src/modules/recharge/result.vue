@@ -16,7 +16,7 @@
             </nav>
 
             <section>
-                <Input type="textarea" v-model="pdr_remark" :placeholder="placeholder" style="background: #fafafa;" />
+                <Input type="textarea" maxlength="100" v-model="pdr_remark" :placeholder="placeholder" style="background: #fafafa;" />
             </section>
 
             <nav class="nav">
@@ -75,7 +75,7 @@ export default {
         pdr_images: fileList.map(i => i.url),
       })
 
-      console.log('res___________', res)
+      console.log('提交结果res___________', res)
     },
 
     toRechargePage() {
