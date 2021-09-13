@@ -23,9 +23,32 @@ export default {
       query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
       timeOut: 10,
       status: null,
+      timer: null,
     }
   },
+
+  created() {
+    this.resetTimer()
+  },
+
   methods: {
+    resetTimer() {
+      clearInterval(this.timer)
+      this.timeOut = 10
+      this.startInterval()
+    },
+
+    startInterval() {
+      this.timer = setInterval(() => {
+        if (this.timeOut) {
+          this.timeOut--
+        } else {
+          this.toResultPage(this.status)
+          clearInterval(this.timer)
+        }
+      }, 1000)
+    },
+
     async refresh() {
       const { code, data: { status } } = await pub.refreshPayStatus(this.query)
       return code === 200 ? Promise.resolve(status) : Promise.reject(code)
