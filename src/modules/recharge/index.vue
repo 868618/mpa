@@ -206,7 +206,7 @@ export default {
         if (resultCode !== '9000') return
         console.log(window.location)
         const { origin } = window.location
-        window.location.href = `${origin}/refresh.html`
+        window.location.href = `${origin}/refresh.html?pdr_id=${data.pdr_id}`
       })
     },
   },

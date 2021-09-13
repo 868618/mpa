@@ -33,6 +33,13 @@ class Pub extends Http {
       url: '/api/frontend/oauth/oauth/index',
     })
   }
+
+  refreshPayStatus(data) {
+    return this.request({
+      url: '/api/frontend/cash/cash/index',
+      data,
+    })
+  }
 }
 
 export default new Pub()

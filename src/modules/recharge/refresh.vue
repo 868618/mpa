@@ -3,7 +3,7 @@
         <header class="header">
             <div class="top">倒计时</div>
             <div class="bottom">
-                10<span>s</span>
+                {{ timeOut }}<span>s</span>
             </div>
         </header>
 
@@ -12,6 +12,41 @@
         <footer class="refresh_btn">刷新</footer>
     </div>
 </template>
+
+<script>
+import pub from '@/api/pub'
+
+export default {
+  name: 'Refresh',
+  data() {
+    return {
+      query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
+      timeOut: 10,
+      status: null,
+    }
+  },
+  methods: {
+    async refresh() {
+      const { code, data: { status } } = await pub.refreshPayStatus(this.query)
+      return code === 200 ? Promise.resolve(status) : Promise.reject(code)
+    },
+    async loopRefresh() {
+      if (this.timeOut) {
+        const status = await this.refresh()
+        this.status = status
+        if (!status) this.loopRefresh()
+      } else {
+        this.toResultPage(this.status)
+      }
+    },
+
+    toResultPage(status) {
+      const { origin } = window.location
+      window.location.href = `${origin}/result?status=${Number(status) === 1 ? 'success' : 'error'}`
+    },
+  },
+}
+</script>
 
 <style lang="less" scoped>
     .refresh {
