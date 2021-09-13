@@ -42,6 +42,7 @@ export default {
       this.timer = setInterval(() => {
         if (this.timeOut) {
           this.timeOut--
+          this.loopRefresh()
         } else {
           this.toResultPage(this.status)
           clearInterval(this.timer)
