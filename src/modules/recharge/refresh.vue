@@ -47,10 +47,11 @@ export default {
           this.toResultPage(this.status)
           clearInterval(this.timer)
         }
-      }, 1000)
+      }, 10000)
     },
 
     async refresh() {
+      console.log('this.query', this.query)
       const { code, data: { status } } = await pub.refreshPayStatus(this.query)
       return code === 200 ? Promise.resolve(status) : Promise.reject(code)
     },
