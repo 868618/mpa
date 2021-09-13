@@ -57,25 +57,31 @@ export default {
       query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
       //   pdr_images: [],
       pdr_remark: '',
+      uploading: false,
     }
   },
 
   methods: {
 
     async ok() {
+      if (this.uploading) {
+        this.$toast('有图片上传中，请稍等')
+        return
+      }
       const { pdr_id } = this.query
       const { pdr_remark, fileList } = this
       if (pdr_remark === '' && !fileList.length) {
         this.toRechargePage()
         return
       }
-      const res = await pub.remarkOrder({
-        pdr_id,
+      const { code } = await pub.remarkOrder({
+        pdr_id: Number(pdr_id),
         pdr_remark,
-        pdr_images: fileList.map(i => i.url),
+        pdr_images: fileList.filter(i => i.status === 'done').map(i => i.url),
       })
-
-      console.log('提交结果res___________', res)
+      if (code === 200) {
+        this.toRechargePage()
+      }
     },
 
     toRechargePage() {
@@ -87,6 +93,7 @@ export default {
       console.log('event', event.target.files[0])
     },
     async afterRead(file) {
+      this.uploading = true
       console.log('file-----', file.file)
       file.status = 'uploading';
       file.message = '上传中...';
@@ -95,17 +102,21 @@ export default {
       param.append('uploadFile[]', file.file)
 
       const res = await pub.upLoadFile({
-        key: 'c01a55aed70fd31a8560473e4c051a89',
+        // key: 'c01a55aed70fd31a8560473e4c051a89',
         flag: 1,
         param,
       })
-      //   console.log('res', res)
+      this.uploading = false
       if (res.code === 0) {
         file.status = 'done';
         file.message = '上传完成';
         const [url] = res.data.list
         file.url = url
         // console.log('fileList', this.fileList)
+      } else {
+        file.status = 'failed';
+        file.message = '上传失败';
+        this.$toast.fail(res.msg)
       }
     },
   },
