@@ -48,7 +48,7 @@ export default {
           this.toResultPage(this.status)
           clearInterval(this.timer)
         }
-      }, 10000)
+      }, 1000)
     },
 
     async refresh() {
