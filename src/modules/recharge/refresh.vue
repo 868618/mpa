@@ -9,7 +9,7 @@
 
         <nav class="nav">等待返回支付结果</nav>
 
-        <footer class="refresh_btn">刷新</footer>
+        <footer class="refresh_btn" @click="resetTimer">刷新</footer>
     </div>
 </template>
 
@@ -67,7 +67,7 @@ export default {
 
     toResultPage(status) {
       const { origin } = window.location
-      window.location.href = `${origin}/result?status=${Number(status) === 1 ? 'success' : 'error'}`
+      window.location.href = `${origin}/result.html?status=${Number(status) === 1 ? 'success' : 'error'}`
     },
   },
 }
