@@ -78,11 +78,17 @@ export default {
         this.$toast.fail('图片上传失败')
         return
       }
+      this.$toast.loading({
+        forbidClick: true,
+        loadingType: 'spinner',
+        duration: 0,
+      })
       const { code } = await pub.remarkOrder({
         pdr_id: Number(pdr_id),
         pdr_remark,
         pdr_images: fileList.filter(i => i.status === 'done').map(i => i.url),
       })
+      this.$toast.clear()
       if (code === 200) {
         this.toRechargePage()
       }
