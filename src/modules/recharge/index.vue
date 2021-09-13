@@ -207,6 +207,7 @@ export default {
         console.log(window.location)
         const { origin } = window.location
         // window.location.href = `${origin}/refresh.html?pdr_id=${data.pdr_id}&money=${this.money}`
+
         window.location.href.replace(`${origin}/refresh.html?pdr_id=${data.pdr_id}&money=${this.money}`)
       })
     },
