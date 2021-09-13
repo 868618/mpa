@@ -29,7 +29,7 @@
         </main>
         <footer class="footer">
             <Button color="#F1270D" block round v-if="isSuccess">确认充值</Button>
-            <Button color="#F1270D" block round v-else>重新充值</Button>
+            <Button color="#F1270D" block round v-else @click="toRechargePage">重新充值</Button>
         </footer>
     </div>
 </template>
@@ -55,6 +55,12 @@ export default {
   },
 
   methods: {
+
+    toRechargePage() {
+      const { origin } = window.location
+      window.location.href = `${origin}/recharge.html`
+    },
+
     getFile(event) {
       console.log('event', event.target.files[0])
     },
