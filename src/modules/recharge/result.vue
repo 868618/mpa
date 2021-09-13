@@ -65,7 +65,7 @@ export default {
 
     async ok() {
       if (this.uploading) {
-        this.$toast('有图片上传中，请稍等')
+        this.$toast('图片上传中，请稍等')
         return
       }
       const { pdr_id } = this.query
