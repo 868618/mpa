@@ -36,8 +36,11 @@
 
 <script>
 
-import { Field, Uploader, Button } from 'vant'
+import Vue from 'vue'
+import { Field, Uploader, Button, Toast } from 'vant'
 import pub from '@/api/pub'
+
+Vue.use(Toast)
 
 export default {
   name: 'refresh',
@@ -52,7 +55,8 @@ export default {
       fileList: [],
       isSuccess: window.location.href.includes('success'),
       query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
-      pdr_images: [],
+      //   pdr_images: [],
+      pdr_remark: '',
     }
   },
 
@@ -60,11 +64,15 @@ export default {
 
     async ok() {
       const { pdr_id } = this.query
-      const { pdr_remark, pdr_images } = this
+      const { pdr_remark, fileList } = this
+      if (pdr_remark === '' && !fileList.length) {
+        this.toRechargePage()
+        return
+      }
       const res = await pub.remarkOrder({
         pdr_id,
         pdr_remark,
-        pdr_images,
+        pdr_images: fileList.map(i => i.url),
       })
 
       console.log('res___________', res)
@@ -91,12 +99,13 @@ export default {
         flag: 1,
         param,
       })
-      console.log('res', res)
+      //   console.log('res', res)
       if (res.code === 0) {
         file.status = 'done';
         file.message = '上传完成';
-        // this.pdr_images.push(res.data.list[0])
-        console.log('fileList', this.fileList)
+        const [url] = res.data.list
+        file.url = url
+        // console.log('fileList', this.fileList)
       }
     },
   },
