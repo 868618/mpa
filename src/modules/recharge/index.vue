@@ -203,12 +203,14 @@ export default {
       if (code !== 200) return
       console.log(data)
       window.ap.tradePay({ tradeNO: data.tradeNo }, ({ resultCode }) => {
-        if (resultCode !== '9000') return
+        if (resultCode !== '9000') {
+          this.$toast('支付失败')
+          return
+        }
         console.log(window.location)
         const { origin } = window.location
-        window.location.href = `${origin}/refresh.html?pdr_id=${data.pdr_id}&money=${this.money}`
-
-        // window.location.href.replace(`${origin}/refresh.html?pdr_id=${data.pdr_id}&money=${this.money}`)
+        // window.location.href = `${origin}/refresh.html?pdr_id=${data.pdr_id}&money=${this.money}`
+        window.location.href.replace(`${origin}/recharge.html`)
       })
     },
   },

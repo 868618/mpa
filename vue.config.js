@@ -6,6 +6,8 @@ const { ANALYZER, CONSOLE } = process.env
 
 const VConsolePlugin = require('vconsole-webpack-plugin')
 
+const CopyPlugin = require('copy-webpack-plugin')
+
 module.exports = {
   configureWebpack: {
     optimization: {
@@ -31,6 +33,15 @@ module.exports = {
         },
       },
     },
+    plugins: [
+      new CopyPlugin({
+        patterns: [
+          {
+            from: './*.txt',
+          },
+        ],
+      }),
+    ],
   },
 
   pages: {
@@ -92,6 +103,15 @@ module.exports = {
     ANALYZER && config.plugin('analyzer').use(BundleAnalyzerPlugin)
 
     CONSOLE && config.plugin('console').use(VConsolePlugin, [{ enable: true }])
+    // config.plugin('copy-webpack-plugin').use(CopyPlugin, [{
+    //   patterns: [
+    //     {
+    //       from: 'src/config/*.txt',
+    //       to: 'dist',
+    //       context: 'mpa/',
+    //     },
+    //   ],
+    // }])
 
     /*
       图片小于10k就自动转base64
