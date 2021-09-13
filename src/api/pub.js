@@ -35,6 +35,7 @@ class Pub extends Http {
   }
 
   refreshPayStatus(data) {
+    console.log('data________________', data)
     return this.request({
       url: '/api/frontend/cash/cash/index',
       data,
