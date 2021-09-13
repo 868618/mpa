@@ -34,11 +34,10 @@ class Pub extends Http {
     })
   }
 
-  refreshPayStatus(data) {
-    console.log('data________________', data)
+  refreshPayStatus(params) {
     return this.request({
       url: '/api/frontend/cash/cash/index',
-      data,
+      params,
     })
   }
 }
