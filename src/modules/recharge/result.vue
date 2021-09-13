@@ -8,7 +8,7 @@
         <main class="main" v-if="isSuccess">
             <nav class="nav">
                 <div class="left">充值金额</div>
-                <div class="right">¥9.00</div>
+                <div class="right">¥{{ query.money }}</div>
             </nav>
 
             <nav class="nav">
@@ -28,7 +28,7 @@
 
         </main>
         <footer class="footer">
-            <Button color="#F1270D" block round v-if="isSuccess">确认充值</Button>
+            <Button color="#F1270D" block round v-if="isSuccess">提交</Button>
             <Button color="#F1270D" block round v-else @click="toRechargePage">重新充值</Button>
         </footer>
     </div>
@@ -51,6 +51,7 @@ export default {
       placeholder: '在此填写输入充值的账户手机号和顾问名称有助于加快充值速度',
       fileList: [],
       isSuccess: window.location.href.includes('success'),
+      query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
     }
   },
 

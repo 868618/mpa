@@ -40,6 +40,13 @@ class Pub extends Http {
       params,
     })
   }
+
+  remarkOrder(data) {
+    return this.request({
+      url: '/api/frontend/recharge/update_remark',
+      data,
+    })
+  }
 }
 
 export default new Pub()

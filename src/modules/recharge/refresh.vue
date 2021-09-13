@@ -68,7 +68,7 @@ export default {
 
     toResultPage(status) {
       const { origin } = window.location
-      window.location.href = `${origin}/result.html?status=${Number(status) === 1 ? 'success' : 'error'}&pdr_id=${this.query.pdr_id}`
+      window.location.href = `${origin}/result.html?status=${Number(status) === 1 ? 'success' : 'error'}&pdr_id=${this.query.pdr_id}&money=${this.query.money}`
     },
   },
 }
