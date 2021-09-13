@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 import pub from '@/api/pub'
 
 export default {
@@ -52,7 +53,7 @@ export default {
 
     async refresh() {
       console.log('this.query', this.query)
-      const { code, data: { status } } = await pub.refreshPayStatus(this.query)
+      const { code, data: { status } } = await pub.refreshPayStatus(qs.stringify(this.query))
       return code === 200 ? Promise.resolve(status) : Promise.reject(code)
     },
     async loopRefresh() {
