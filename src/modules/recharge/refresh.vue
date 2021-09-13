@@ -60,7 +60,7 @@ export default {
       if (this.timeOut) {
         const status = await this.refresh()
         this.status = status
-        if (!status) this.loopRefresh()
+        status === 1 ? this.toResultPage() : this.loopRefresh()
       } else {
         this.toResultPage(this.status)
       }
