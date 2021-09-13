@@ -16,7 +16,7 @@
             </nav>
 
             <section>
-                <Input type="textarea" :placeholder="placeholder" style="background: #fafafa;" />
+                <Input type="textarea" v-model="pdr_remark" :placeholder="placeholder" style="background: #fafafa;" />
             </section>
 
             <nav class="nav">
@@ -28,7 +28,7 @@
 
         </main>
         <footer class="footer">
-            <Button color="#F1270D" block round v-if="isSuccess">提交</Button>
+            <Button color="#F1270D" block round v-if="isSuccess" @click="ok">提交</Button>
             <Button color="#F1270D" block round v-else @click="toRechargePage">重新充值</Button>
         </footer>
     </div>
@@ -52,10 +52,23 @@ export default {
       fileList: [],
       isSuccess: window.location.href.includes('success'),
       query: window.location.search ? Object.fromEntries(window.location.search.slice(1).split('&').map(i => i.split('='))) : {},
+      pdr_images: [],
     }
   },
 
   methods: {
+
+    async ok() {
+      const { pdr_id } = this.query
+      const { pdr_remark, pdr_images } = this
+      const res = await pub.remarkOrder({
+        pdr_id,
+        pdr_remark,
+        pdr_images,
+      })
+
+      console.log('res___________', res)
+    },
 
     toRechargePage() {
       const { origin } = window.location
@@ -79,9 +92,12 @@ export default {
         param,
       })
       console.log('res', res)
-
-      file.status = 'done';
-      file.message = '上传完成';
+      if (res.code === 0) {
+        file.status = 'done';
+        file.message = '上传完成';
+        // this.pdr_images.push(res.data.list[0])
+        console.log('fileList', this.fileList)
+      }
     },
   },
 
