@@ -30,6 +30,7 @@ export default {
 
   created() {
     this.resetTimer()
+    this.loopRefresh()
   },
 
   methods: {
@@ -43,7 +44,6 @@ export default {
       this.timer = setInterval(() => {
         if (this.timeOut) {
           this.timeOut--
-          this.loopRefresh()
         } else {
           this.toResultPage(this.status)
           clearInterval(this.timer)
