@@ -22,7 +22,7 @@
             <nav class="nav">
                 <div class="left">付款成功截图</div>
             </nav>
-            <Uploader :after-read="afterRead" v-model="fileList" />
+            <Uploader :after-read="afterRead" v-model="fileList" :max-count="3" />
 
             <p class="warning">*付款完成后请务必将付款成功截图在此处提交或发送给专员，有助于加快充值速度</p>
 
