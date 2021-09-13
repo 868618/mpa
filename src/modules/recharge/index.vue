@@ -188,7 +188,6 @@ export default {
 
     async payByAlipay() {
       console.log('支付宝支付')
-      // this.$toast.loading({ forbidClick: true, loadingType: 'spinner', duration: 0 })
       window.ap.showLoading()
       const { user_key, environment } = this
       const pay_mode = environment === 'wechat' ? 'wxpay' : 'alipay'
@@ -198,9 +197,17 @@ export default {
         user_key,
         pay_mode,
       }))
-      // this.$toast.clear()
       window.ap.hideLoading()
       console.log('res', res)
+      const { code, data } = res
+      if (code !== 200) return
+      console.log(data)
+      window.ap.tradePay({ tradeNO: data.tradeNo }, ({ resultCode }) => {
+        if (resultCode !== '9000') return
+        console.log(window.location)
+        const { origin } = window.location
+        window.location.href = `${origin}/refresh.html`
+      })
     },
   },
 }
