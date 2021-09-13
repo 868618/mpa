@@ -74,6 +74,10 @@ export default {
         this.toRechargePage()
         return
       }
+      if (fileList.some(i => i.status === 'failed')) {
+        this.$toast.fail('图片上传失败')
+        return
+      }
       const { code } = await pub.remarkOrder({
         pdr_id: Number(pdr_id),
         pdr_remark,
