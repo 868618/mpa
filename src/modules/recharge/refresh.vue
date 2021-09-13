@@ -56,13 +56,14 @@ export default {
       const { code, data: { status } } = await pub.refreshPayStatus(this.query)
       return code === 200 ? Promise.resolve(Number(status)) : Promise.reject(code)
     },
+
     async loopRefresh() {
       if (this.timeOut) {
         const status = await this.refresh()
         this.status = status
-        status === 1 ? this.toResultPage() : this.loopRefresh()
+        status === 1 ? this.toResultPage(this.status) : this.loopRefresh()
       } else {
-        this.toResultPage(this.status)
+        this.toResultPage()
       }
     },
 
