@@ -3,7 +3,6 @@ import Index from './index.vue'
 import '@/assets/css/reset.css'
 import 'lib-flexible/flexible.js'
 // import router from './router'
-// import App from './App.vue'
 
 Vue.config.productionTip = false
 
