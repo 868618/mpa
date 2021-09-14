@@ -10,7 +10,8 @@
     "dev": "cross-env CONSOLE=true vue-cli-service serve --mode development",
     "dev:pro": "cross-env CONSOLE=true vue-cli-service serve --mode production",
     "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
-    "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push"
+    "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push",
+    "sh": "sh shell.sh"
   },
   "dependencies": {
     "axios": "^0.21.1",
