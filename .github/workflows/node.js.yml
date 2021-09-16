@@ -34,6 +34,6 @@ jobs:
           MY_TEST: "my_test_env"
       - run: npm i
       - run: echo "::save-state name=processID::12345"
-      - run: npm run test.js
+      - run: npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
