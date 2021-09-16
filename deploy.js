@@ -3,7 +3,7 @@
 // import ora from 'ora'
 
 // const chalk = require('chalk')
-import chalk from 'chalk'
+// import chalk from 'chalk'
 
 const path = require('path');
 
@@ -45,12 +45,14 @@ const upload = async () => {
     concurrency: 10,
     tick(l, r, error) {
     //   error ? console.log(chalk.red(error)) : (spinner_upload.text = `正在上传文件：${l}`)
-      error ? console.log(chalk.red(error)) : console.log(chalk.yellow(l))
+    //   error ? console.log(chalk.red()) : console.log(chalk.yellow(l))
+      console.log(error || l)
     },
   })
 
   //   spinner_upload.stop()
-  console.log(chalk.green('success'))
+  //   console.log(chalk.green('success'))
+  console.log('success')
   ssh.connection.end()
 }
 
