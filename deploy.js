@@ -1,12 +1,15 @@
 // const fs = require('fs');
+// const ora = require('ora')
+import ora from 'ora'
+
+// const chalk = require('chalk')
+import chalk from 'chalk'
+
 const path = require('path');
 
 const { NodeSSH } = require('node-ssh');
 
 const ssh = new NodeSSH()
-
-const ora = require('ora')
-const chalk = require('chalk')
 
 // host: '82.156.50.191',
 // port: '22',
