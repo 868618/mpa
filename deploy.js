@@ -16,12 +16,14 @@ const chalk = require('chalk')
 // const localPath = path.join(__dirname, './test')
 // const remotePath = '/www/wwwroot/wechat.emailvx.com/'
 
+const { _host: host, _username: username, _privateKey: privateKey } = process.env
+
 const config = {
   service: {
-    host: '82.156.50.191',
+    host,
     port: '22',
-    username: 'qianduan',
-    privateKey: './id_rsa',
+    username,
+    privateKey,
   },
 }
 
