@@ -29,8 +29,8 @@ jobs:
           key: ${{ secrets.ID_RSA }}
           cache: "npm"
         env:
-          env_username: ${{ secrets.USERNAME }}
+          ENV_USERNAME: ${{ secrets.USERNAME }}
       - run: npm i
-      - run: npm run test
+      - run: cross-env CONSOLE="$env:ENV_USERNAME" npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
