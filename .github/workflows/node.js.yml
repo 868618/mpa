@@ -33,6 +33,7 @@ jobs:
           MY_HOST: ${{ secrets.HOST }}
           MY_TEST: "my_test_env"
       - run: npm i
-      - run: echo "::save-state name=processID::12345" && npm run test
+      - run: node test.js MY_TEST=${{ env.MY_TEST }}
+      # - run: echo "::save-state name=processID::12345" && npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
