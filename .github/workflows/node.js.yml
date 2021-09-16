@@ -32,6 +32,6 @@ jobs:
           ENV_USERNAME: ${{ secrets.USERNAME }}
           MY_ENV: ${{ secrets.HOST }}
       - run: npm i
-      - run: cross-env $MY_ENV npm run test
+      - run: cross-env yyyyy=$MY_ENV npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
