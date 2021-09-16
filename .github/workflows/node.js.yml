@@ -33,6 +33,6 @@ jobs:
           MY_HOST: ${{ secrets.HOST }}
           MY_TEST: my_test_env
       - run: npm i
-      - run: cross-env custom_host=${{ env.MY_HOST }} node test.js
+      - run: cross-env custom_host=${{ secrets.USERNAME }} node test.js
       # - run: npm run build:dev
       # - run: npm run deploy
