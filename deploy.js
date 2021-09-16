@@ -26,7 +26,7 @@ const config = {
     host: '82.156.50.191',
     port: '22',
     username: 'qianduan',
-    privateKey: fs.readFileSync('./id_rsa'),
+    privateKey: './id_rsa',
   },
 }
 
