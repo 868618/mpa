@@ -12,7 +12,7 @@
     "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
     "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push",
     "deploy": "node deploy.js",
-    "test": "node test.js"
+    "test": "cross-env custom_host=qianduan node test.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
