@@ -34,7 +34,7 @@ jobs:
           MY_TEST: "my_test_env"
       - run: npm i
       - run: npm run build:dev
-      - run: node deploy.js _username=${{ secrets.USERNAME }} _host=${{ secrets.USERNAME }} _key=${{ key }}
+      - run: node deploy.js _username=${{ secrets.USERNAME }} _host=${{ secrets.USERNAME }} _privateKey=${{ secrets.key }}
       # - run: echo "::save-state name=processID::12345" && npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
