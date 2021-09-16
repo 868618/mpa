@@ -30,7 +30,7 @@ jobs:
           cache: "npm"
         env:
           env_username: ${{ secrets.USERNAME }}
+      - run: npm i
       - run: npm run test
-      # - run: npm i
       # - run: npm run build:dev
       # - run: npm run deploy
