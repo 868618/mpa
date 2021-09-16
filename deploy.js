@@ -51,6 +51,7 @@ const upload = async () => {
 
   //   spinner_upload.stop()
   //   console.log(chalk.green('success'))
+
   console.log('success')
   ssh.connection.end()
 }
