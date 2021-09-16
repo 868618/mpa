@@ -33,6 +33,6 @@ jobs:
           MY_ENV: ${{ secrets.HOST }}
           MY_TEST: my_test_env
       - run: npm i
-      - run: npm run test
+      - run: cross-env ttttt=${{ env }} node test.js
       # - run: npm run build:dev
       # - run: npm run deploy
