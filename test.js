@@ -1,1 +1,1 @@
-console.log('process.env.env_username', process.env.env_username)
+console.log('process.env.env_username', process.env)

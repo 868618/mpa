@@ -31,6 +31,6 @@ jobs:
         env:
           ENV_USERNAME: ${{ secrets.USERNAME }}
       - run: npm i
-      - run: cross-env CONSOLE="$env:ENV_USERNAME" npm run test
+      - run: npm run test
       # - run: npm run build:dev
       # - run: npm run deploy
