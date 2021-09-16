@@ -32,7 +32,7 @@ const upload = async () => {
   spinner_connect.stop()
 
   const spinner_upload = ora('准备上传文件')
-  const localPath = path.join(__dirname, './test')
+  const localPath = path.join(__dirname, './public')
   const remotePath = '/www/wwwroot/wechat.emailvx.com/'
   spinner_upload.start()
   await ssh.putDirectory(localPath, remotePath, {
