@@ -30,9 +30,9 @@ jobs:
           cache: "npm"
         env:
           ENV_USERNAME: ${{ secrets.USERNAME }}
-          MY_ENV: ${{ secrets.HOST }}
+          MY_HOST: ${{ secrets.HOST }}
           MY_TEST: my_test_env
       - run: npm i
-      - run: cross-env ttttt=${{ fromJSON(env) }} node test.js
+      - run: cross-env custom_host=${{ env.MY_HOST }} node test.js
       # - run: npm run build:dev
       # - run: npm run deploy
