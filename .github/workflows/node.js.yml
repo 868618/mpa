@@ -31,6 +31,7 @@ jobs:
         env:
           ENV_USERNAME: ${{ secrets.USERNAME }}
           MY_ENV: ${{ secrets.HOST }}
+          MY_TEST: my_test_env
       - run: npm i
       - run: npm run test
       # - run: npm run build:dev
