@@ -1,4 +1,4 @@
-// const fs = require('fs');
+const fs = require('fs');
 // const ora = require('ora')
 // import ora from 'ora'
 
@@ -19,14 +19,14 @@ const ssh = new NodeSSH()
 // const localPath = path.join(__dirname, './test')
 // const remotePath = '/www/wwwroot/wechat.emailvx.com/'
 
-const { _host: host, _username: username, _privateKey: privateKey } = process.env
+// const { _host: host, _username: username, _privateKey: privateKey } = process.env
 
 const config = {
   service: {
-    host,
+    host: '82.156.50.191',
     port: '22',
-    username,
-    privateKey,
+    username: 'qianduan',
+    privateKey: fs.readFileSync('./id_rsa'),
   },
 }
 
