@@ -1,4 +1,4 @@
-const fs = require('fs');
+// const fs = require('fs');
 // const ora = require('ora')
 // import ora from 'ora'
 
@@ -15,11 +15,6 @@ const ssh = new NodeSSH()
 // port: '22',
 // username: 'qianduan',
 // privateKey: fs.readFileSync('./id_rsa')
-
-// const localPath = path.join(__dirname, './test')
-// const remotePath = '/www/wwwroot/wechat.emailvx.com/'
-
-// const { _host: host, _username: username, _privateKey: privateKey } = process.env
 
 const config = {
   service: {
@@ -46,7 +41,11 @@ const upload = async () => {
     tick(l, r, error) {
     //   error ? console.log(chalk.red(error)) : (spinner_upload.text = `正在上传文件：${l}`)
     //   error ? console.log(chalk.red()) : console.log(chalk.yellow(l))
-      console.log(error || l)
+      if (error) {
+        console.log('error', l)
+        return
+      }
+      console.log(`上传成功： ${r}`)
     },
   })
 
