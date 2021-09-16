@@ -11,16 +11,19 @@
     "dev:pro": "cross-env CONSOLE=true vue-cli-service serve --mode production",
     "upload:dev": "npm run build:dev && git add . && git commit -am ’提交一下‘ && git push",
     "upload:pro": "npm run build:pro && git add . && git commit -am ’提交一下‘ && git push",
-    "sh": "sh shell.sh"
+    "deploy": "node deploy.js",
+    "test": "node test.js"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "chalk": "^4.1.2",
     "copy-webpack-plugin": "^6.4.1",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.3",
     "lib-flexible": "^0.3.2",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
+    "ora": "^6.0.1",
     "postcss-pxtorem": "^5.1.1",
     "qs": "^6.10.1",
     "swiper": "^5.4.5",

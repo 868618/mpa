@@ -24,9 +24,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.ID_RSA }}
           cache: "npm"
-      - run: npm i
-      - run: npm run sh
-      - run: npm run build:dev
-      - run: npm run sh
-    # - run: npm test
+        env:
+          env_username: ${{ secrets.USERNAME }}
+      - run: npm run test
+      # - run: npm i
+      # - run: npm run build:dev
+      # - run: npm run deploy
